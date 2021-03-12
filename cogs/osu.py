@@ -32,7 +32,7 @@ class Osu(Cog):
 
         # fetch results
         async with glob.http.get(url) as resp:
-            json = await resp.json()
+            json = await resp.json()[0]
             if not resp or not resp.ok or json == []:
                 if glob.config.debug:
                     log("Osu: Failed to get api data: request failed.", Ansi.LRED)
@@ -48,7 +48,7 @@ class Osu(Cog):
             embed.add_field(name="Accuracy", value=f"{json['accuracy']}", inline=False)
             embed.add_field(name="Play Count", value=f"{json['playcount']}", inline=False)
             return await ctx.send(embed=embed)
-            #return await ctx.send(f"Got user!\n```{json}```")
+            return await ctx.send(f"Got user!\n```{json}```")
 
 
 def setup(bot) -> None:
