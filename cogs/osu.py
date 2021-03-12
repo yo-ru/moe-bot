@@ -40,14 +40,14 @@ class Osu(Cog):
 
             osu = json[0]
             embed=Embed(title=f":flag_{osu['country']}: {osu['username']} | {mode}", color=0xff94ed)
-            embed.set_thumbnail(url=f"https://a.ppy.sh/{osu['user_id']}")
-            embed.add_field(name="Global Rank", value=f"{osu['pp_rank']}", inline=True)
-            embed.add_field(name="Country Rank", value=f"{osu['pp_country_rank']}", inline=True)
-            embed.add_field(name="PP", value=f"{osu['pp_raw']}", inline=True)
-            embed.add_field(name="Ranked Score", value=f"{osu['ranked_score']}", inline=True)
-            embed.add_field(name="Total Score", value=f"{osu['total_score']}", inline=True)
-            embed.add_field(name="Accuracy", value=f"{osu['accuracy']}", inline=True)
-            embed.add_field(name="Play Count", value=f"{osu['playcount']}", inline=True)
+            embed.set_thumbnail(url=f"https://a.ppy.sh/{osu['user_id']:,}")
+            embed.add_field(name="Global Rank", value=f"{osu['pp_rank']:,}", inline=True)
+            embed.add_field(name="Country Rank", value=f"{osu['pp_country_rank']:,}", inline=True)
+            embed.add_field(name="PP", value=f"{osu['pp_raw']:,.2f}", inline=True)
+            embed.add_field(name="Ranked Score", value=f"{osu['ranked_score']:,}", inline=True)
+            embed.add_field(name="Total Score", value=f"{osu['total_score']:,}", inline=True)
+            embed.add_field(name="Accuracy", value=f"{osu['accuracy']:.2f}", inline=True)
+            embed.add_field(name="Play Count", value=f"{osu['playcount']:,}", inline=True)
             return await ctx.send(embed=embed)
             return await ctx.send(f"Got user!\n```{json}```")
 
