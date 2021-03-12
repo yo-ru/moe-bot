@@ -1,0 +1,6 @@
+cmyui
+orjson
+aiohttp
+asyncio
+discord[voice]
+discord-py-slash-command
