@@ -32,21 +32,22 @@ class Osu(Cog):
 
         # fetch results
         async with glob.http.get(url) as resp:
-            json = await resp.json()[0]
+            json = await resp.json()
             if not resp or not resp.ok or json == []:
                 if glob.config.debug:
                     log("Osu: Failed to get api data: request failed.", Ansi.LRED)
                 return await ctx.send(f"Failed to fetch {profile}'s osu! profile!\nMake sure that you have entered their name correctly!")
 
-            embed=Embed(title=f":flag_{json['country']}: {json['username']} | {mode}", color=0xff94ed)
-            embed.set_thumbnail(url=f"https://a.ppy.sh/{json['user_id']}")
-            embed.add_field(name="Global Rank", value=f"{json['pp_rank']}", inline=False)
-            embed.add_field(name="Country Rank", value=f"{json['pp_country_rank']}", inline=False)
-            embed.add_field(name="PP", value=f"{json['pp_raw']}", inline=False)
-            embed.add_field(name="Ranked Score", value=f"{json['ranked_score']}", inline=False)
-            embed.add_field(name="Total Score", value=f"{json['total_score']}", inline=False)
-            embed.add_field(name="Accuracy", value=f"{json['accuracy']}", inline=False)
-            embed.add_field(name="Play Count", value=f"{json['playcount']}", inline=False)
+            osu = json[0]
+            embed=Embed(title=f":flag_{osu['country']}: {osu['username']} | {mode}", color=0xff94ed)
+            embed.set_thumbnail(url=f"https://a.ppy.sh/{osu['user_id']}")
+            embed.add_field(name="Global Rank", value=f"{osu['pp_rank']}", inline=False)
+            embed.add_field(name="Country Rank", value=f"{osu['pp_country_rank']}", inline=False)
+            embed.add_field(name="PP", value=f"{osu['pp_raw']}", inline=False)
+            embed.add_field(name="Ranked Score", value=f"{osu['ranked_score']}", inline=False)
+            embed.add_field(name="Total Score", value=f"{osu['total_score']}", inline=False)
+            embed.add_field(name="Accuracy", value=f"{osu['accuracy']}", inline=False)
+            embed.add_field(name="Play Count", value=f"{osu['playcount']}", inline=False)
             return await ctx.send(embed=embed)
             return await ctx.send(f"Got user!\n```{json}```")
 
