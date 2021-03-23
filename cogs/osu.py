@@ -6,7 +6,7 @@ from discord_slash import SlashContext, cog_ext
 import config
 
 class Osu(Cog):
-    def __init(self, bot) -> None:
+    def __init__(self, bot) -> None:
         self.bot = bot
 
     """
