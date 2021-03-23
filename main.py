@@ -56,7 +56,7 @@ async def on_ready() -> None:
         log(f"Connected to MySQL!", Ansi.LGREEN)
 
     # get client session
-    bot.http = aiohttp.ClientSession(json_serialize=orjson.dumps)
+    bot.request = aiohttp.ClientSession(json_serialize=orjson.dumps)
     if config.debug:
         log(f"Got Client Session!", Ansi.LGREEN)
 

@@ -33,7 +33,7 @@ class Osu(Cog):
         url += f"&m={mode_conv.get(mode)}"
 
         # fetch results
-        async with self.bot.http.get(url) as resp:
+        async with self.bot.request.get(url) as resp:
             json = await resp.json()
             if not resp or not resp.ok or json == []:
                 if config.debug:
