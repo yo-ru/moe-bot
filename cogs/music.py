@@ -1,6 +1,7 @@
 import asyncio
 from cmyui import Ansi, log
 from youtube_dl import YoutubeDL
+from youtube_dl.utils import bug_reports_message
 from discord.ext.commands import Cog
 from discord_slash import SlashContext, cog_ext
 from discord import Embed, FFmpegPCMAudio, PCMVolumeTransformer
@@ -10,7 +11,7 @@ import config
 """
 youtube_dl - our source for audio played in voice channels.
 """
-youtube_dl.utils.bug_reports_message = lambda: ''
+bug_reports_message = lambda: ''
 ytdl_format_options = {
     'format': 'bestaudio/best',
     'outtmpl': '%(title)s.%(ext)s',
