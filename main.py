@@ -8,7 +8,7 @@ from discord import Client, Activity, ActivityType
 from cmyui import AsyncSQLPool, Version, Ansi, log
 from discord.ext.commands.errors import CommandNotFound
 
-from objects import glob
+import config
 
 """
 bot - our discord bot.
@@ -22,9 +22,9 @@ slash = SlashCommand(bot, sync_commands=True, override_type=True)
 
 
 """
-glob.version - current version of Sekai.
+bot.version - current version of Sekai.
 """
-glob.version = Version(0, 1, 0)
+bot.version = Version(0, 1, 0)
 
 
 
@@ -36,7 +36,7 @@ for c in os.listdir("./cogs"):
     try:
         if filename != "__pycache__":
             bot.load_extension(f"cogs.{filename}")
-            if glob.config.debug:
+            if config.debug:
                 log(f"Successfully loaded cog: cog.{filename}!", Ansi.LGREEN)
     except:
         log(f"Failed to load cog: cog.{filename}!", Ansi.LRED)
@@ -50,14 +50,14 @@ on_ready() - tasks ran as soon as Sekai is ready.
 @bot.event
 async def on_ready() -> None:
     # connect to mysql
-    glob.db = AsyncSQLPool()
-    await glob.db.connect(glob.config.mysql)
-    if glob.config.debug:
+    bot.db = AsyncSQLPool()
+    await bot.db.connect(config.mysql)
+    if config.debug:
         log(f"Connected to MySQL!", Ansi.LGREEN)
 
     # get client session
-    glob.http = aiohttp.ClientSession(json_serialize=orjson.dumps)
-    if glob.config.debug:
+    bot.http = aiohttp.ClientSession(json_serialize=orjson.dumps)
+    if config.debug:
         log(f"Got Client Session!", Ansi.LGREEN)
 
     # set status
@@ -65,8 +65,8 @@ async def on_ready() -> None:
     
     # Sekai ready
     log(f"Sekai has been logged in as {bot.user}.", Ansi.LBLUE)
-    if glob.config.debug:
-        log(f"Running version {glob.version}!", Ansi.LBLUE)
+    if config.debug:
+        log(f"Running version {bot.version}!", Ansi.LBLUE)
 
 
 
@@ -74,4 +74,4 @@ async def on_ready() -> None:
 run - run Sekai.
 """
 if __name__ == "__main__":
-    bot.run(glob.config.token) # blocking call
+    bot.run(config.token) # blocking call

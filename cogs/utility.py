@@ -2,7 +2,7 @@ from datetime import datetime
 from discord.ext.commands import Cog
 from discord_slash import SlashContext, cog_ext
 
-from objects import glob
+import config
 
 class Utility(Cog):
     def __init__(self, bot) -> None:
@@ -14,7 +14,7 @@ class Utility(Cog):
     @cog_ext.cog_slash(
         name="ping",
         description="Get an accurate representation of latency between Sekai and Discord!",
-        guild_ids=glob.config.guild_ids
+        guild_ids=config.guild_ids
     )
     async def _ping(self, ctx: SlashContext) -> SlashContext:
         await ctx.respond()
@@ -28,7 +28,7 @@ class Utility(Cog):
     @cog_ext.cog_slash(
         name="uptime",
         description="Get Sekai's current total operation time!",
-        guild_ids=glob.config.guild_ids
+        guild_ids=config.guild_ids
     )
     async def _uptime(self, ctx: SlashContext) -> SlashContext:
         await ctx.respond()
@@ -46,11 +46,11 @@ class Utility(Cog):
     @cog_ext.cog_slash(
         name="version",
         description="Get Sekai's current development version!",
-        guild_ids=glob.config.guild_ids
+        guild_ids=config.guild_ids
     )
     async def _version(self, ctx: SlashContext) -> SlashContext:
         await ctx.respond()
-        return await ctx.send(f"I'm currently running version **{glob.version}**!\nCheck my GitHub page to see if my firmware is out of date!")
+        return await ctx.send(f"I'm currently running version **{self.bot.version}**!\nCheck my GitHub page to see if my firmware is out of date!")
     
 def setup(bot) -> None:
     bot.add_cog(Utility(bot))

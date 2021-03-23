@@ -3,7 +3,7 @@ from cmyui import Ansi, log
 from discord.ext.commands import Cog
 from discord_slash import SlashContext, cog_ext
 
-from objects import glob
+import config
 
 class Osu(Cog):
     def __init(self, bot) -> None:
@@ -15,11 +15,13 @@ class Osu(Cog):
     @cog_ext.cog_slash(
         name="lookup",
         description="Look up your osu! profile!",
-        guild_ids=glob.config.guild_ids
+        guild_ids=config.guild_ids
     )
     async def _lookup(self, ctx: SlashContext, profile: str, mode: str) -> SlashContext:
+        await ctx.respond()
+
         # build url
-        url = f"https://osu.ppy.sh/api/get_user?k={glob.config.osu_api_key}&u={profile}"
+        url = f"https://osu.ppy.sh/api/get_user?k={config.osu_api_key}&u={profile}"
         if mode not in ["osu!", "osu!taiko", "osu!catch", "osu!mania"]:
             return await ctx.send(f"Invalid mode selection!\nValid modes are: osu!, osu!taiko, osu!catch, osu!mania.")
         mode_conv =  {
@@ -31,10 +33,10 @@ class Osu(Cog):
         url += f"&m={mode_conv.get(mode)}"
 
         # fetch results
-        async with glob.http.get(url) as resp:
+        async with self.bot.http.get(url) as resp:
             json = await resp.json()
             if not resp or not resp.ok or json == []:
-                if glob.config.debug:
+                if config.debug:
                     log("Osu: Failed to get api data: request failed.", Ansi.LRED)
                 return await ctx.send(f"Failed to fetch {profile}'s osu! profile!\nMake sure that you have entered their name correctly!")
 
@@ -49,8 +51,6 @@ class Osu(Cog):
             embed.add_field(name="Accuracy", value=f"{float(osu['accuracy']):.2f}", inline=True)
             embed.add_field(name="Play Count", value=f"{int(osu['playcount']):,}", inline=True)
             return await ctx.send(embed=embed)
-            return await ctx.send(f"Got user!\n```{json}```")
-
 
 def setup(bot) -> None:
     bot.add_cog(Osu(bot))
