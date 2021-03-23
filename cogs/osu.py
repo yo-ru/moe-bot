@@ -48,7 +48,7 @@ class Osu(Cog):
             embed.add_field(name="PP", value=f"{float(osu['pp_raw']):,.2f}", inline=True)
             embed.add_field(name="Ranked Score", value=f"{int(osu['ranked_score']):,}", inline=True)
             embed.add_field(name="Total Score", value=f"{int(osu['total_score']):,}", inline=True)
-            embed.add_field(name="Accuracy", value=f"{float(osu['accuracy']):.2f}", inline=True)
+            embed.add_field(name="Accuracy", value=f"{float(osu['accuracy']):.2f}%", inline=True)
             embed.add_field(name="Play Count", value=f"{int(osu['playcount']):,}", inline=True)
             return await ctx.send(embed=embed)
 
