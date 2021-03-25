@@ -72,14 +72,14 @@ class Music(Cog):
 
         # if bot is already connected, move them.
         channel = ctx.author.voice.channel
-        if ctx.voice_client:
+        if ctx.message.guild.voice_client:
             await ctx.voice_client.move_to(channel)
         else:
             await channel.connect()
 
         async with ctx.typing():
             player = await YTDLSource.from_url(URL, loop=self.bot.loop, stream=True)
-            ctx.voice_client.play(player, after=ctx.voice_client.disconnect())
+            ctx.message.guild.voice_client.play(player, after=ctx.voice_client.disconnect())
         await ctx.send(f"Now playing: **{player.title}**")
 
 def setup(bot) -> None:
