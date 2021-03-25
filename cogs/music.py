@@ -1,9 +1,9 @@
 import asyncio
 from cmyui import Ansi, log
 from youtube_dl import YoutubeDL
-from youtube_dl.utils import bug_reports_message
 from discord.ext.commands import Cog
 from discord_slash import SlashContext, cog_ext
+from youtube_dl.utils import bug_reports_message
 from discord import Embed, FFmpegPCMAudio, PCMVolumeTransformer
 
 import config
@@ -69,17 +69,17 @@ class Music(Cog):
     )
     async def _play(self, ctx: SlashContext, URL: str) -> SlashContext:
         await ctx.respond()
+        channel = ctx.author.voice.channel
 
         # if bot is already connected, move them.
-        channel = ctx.author.voice.channel
-        if ctx.message.guild.voice_client:
+        if ctx.author.guild.voice_client:
             await ctx.voice_client.move_to(channel)
         else:
             await channel.connect()
 
         async with ctx.typing():
             player = await YTDLSource.from_url(URL, loop=self.bot.loop, stream=True)
-            ctx.message.guild.voice_client.play(player, after=ctx.voice_client.disconnect())
+            ctx.author.guild.voice_client.play(player, after=ctx.author.guild.voice_client.disconnect())
         await ctx.send(f"Now playing: **{player.title}**")
 
 def setup(bot) -> None:
