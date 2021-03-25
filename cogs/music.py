@@ -78,7 +78,7 @@ class Music(Cog):
             await channel.connect()
 
         player = await YTDLSource.from_url(URL, loop=self.bot.loop, stream=True)
-        ctx.author.guild.voice_client.play(player, after=ctx.author.guild.voice_client.disconnect())
+        ctx.author.guild.voice_client.play(player, after=await ctx.author.guild.voice_client.disconnect())
         await ctx.send(f"Now playing: **{player.title}**")
 
 def setup(bot) -> None:
