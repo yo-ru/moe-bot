@@ -75,18 +75,17 @@ class Music(Cog):
             channel = ctx.author.voice.channel
         except AttributeError:
             channel = None
-        voice_client = ctx.author.guild.voice_client
         
         # channel connection logic
         if not channel:
             return await ctx.send("You aren't connect to a voice channel!\nConnect to one and try again.")
-        elif voice_client:
-            await voice_client.move_to(channel)
+        elif ctx.author.guild.voice_client:
+            await ctx.author.guild.voice_client.move_to(channel)
         else:
             await channel.connect()
 
         # play video
-        voice_client.play(player)
+        ctx.author.guild.voice_client.play(player)
         await ctx.send(f"Now playing: **{player.title}**")
 
 def setup(bot) -> None:
