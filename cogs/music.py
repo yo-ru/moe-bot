@@ -71,19 +71,22 @@ class Music(Cog):
         await ctx.respond()
 
         player = await YTDLSource.from_url(URL, loop=self.bot.loop, stream=True)
-        voice_client = ctx.author.guild.voice_client
         channel = ctx.author.voice.channel
+        voice_client = channel.guild.voice_client
         
-        # channel logic.
+        # channel connection logic
         if not channel:
             return await ctx.send("You aren't connect to a voice channel!\nConnect to one and try again.")
         elif voice_client:
             await voice_client.move_to(channel)
         else:
             await channel.connect()
-        if voice_client.is_playing():
+
+        # something is already playing
+        if voice_client.is_connected():
             return await ctx.send("Something is already playing!\nDisconnect or stop the current track and try again.")
 
+        # play video
         voice_client.play(player)
         await ctx.send(f"Now playing: **{player.title}**")
 
