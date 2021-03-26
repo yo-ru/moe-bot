@@ -88,10 +88,6 @@ class Music(Cog):
         else:
             await channel.connect()
 
-        # something is already playing
-        if voice_client.is_connected():
-            return await ctx.send("Something is already playing!\nDisconnect or stop the current track and try again.")
-
         # play video
         voice_client.play(player)
         await ctx.send(f"Now playing: **{player.title}**")
