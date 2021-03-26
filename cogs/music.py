@@ -87,5 +87,22 @@ class Music(Cog):
         ctx.author.guild.voice_client.play(player)
         return await ctx.send(f"Now playing: **{player.title}**")
 
+    
+
+    """
+    stop - stop playing the YouTube video in the currently connected voice channel.
+    """
+    @cog_ext.cog_slash(
+        name="stop",
+        description="Stop the currently playing YouTube video in the connected voice channel.",
+        guild_ids=config.guild_ids
+    )
+    async def _stop(self, ctx: SlashContext) -> SlashContext:
+        if ctx.author.guild.voice_client.is_playing():
+            ctx.author.guild.voice_client.stop()
+            return await ctx.send(f"Stopped playing in **{ctx.author.guild.voice_client.channel.name}**!")
+        else:
+            return await ctx.send(f"I'm currently not playing anything!")
+
 def setup(bot) -> None:
     bot.add_cog(Music(bot))
