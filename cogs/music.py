@@ -69,26 +69,21 @@ class Music(Cog):
     )
     async def _play(self, ctx: SlashContext, URL: str) -> SlashContext:
         await ctx.respond()
-
-        player = await YTDLSource.from_url(URL, loop=self.bot.loop, stream=True)
-        try:
-            channel = ctx.author.voice.channel
-        except AttributeError:
-            channel = None
         
         # channel connection logic
-        if not channel:
+        if not ctx.author.voice.channel:
             return await ctx.send("You aren't connect to a voice channel!\nConnect to one and try again.")
         elif ctx.author.guild.voice_client:
-            await ctx.author.guild.voice_client.move_to(channel)
+            await ctx.author.guild.voice_client.move_to(ctx.author.voice.channel)
         else:
-            await channel.connect()
+            await ctx.author.voice.channel.connect()
         
         # already playing something
         if ctx.author.guild.voice_client.is_playing():
-            ctx.send(f"I'm already playing something in **{channel.name}**!\nPlease disconnect me or stop the current song and try again.")
+            return await ctx.send(f"I'm already playing something in **{ctx.author.voice.channel.name}**!\nPlease disconnect me or stop the current song and try again.")
 
         # play video
+        player = await YTDLSource.from_url(URL, loop=self.bot.loop, stream=True)
         ctx.author.guild.voice_client.play(player)
         return await ctx.send(f"Now playing: **{player.title}**")
 
