@@ -67,7 +67,7 @@ class Music(Cog):
         description="Play a YouTube video in a voice channel!",
         guild_ids=config.guild_ids
     )
-    async def _play(self, ctx: SlashContext, URL: str) -> SlashContext:
+    async def _play(self, ctx: SlashContext, query: str) -> SlashContext:
         await ctx.respond()
         
         # channel connection logic
@@ -83,7 +83,7 @@ class Music(Cog):
             return await ctx.send(f"I'm already playing something in **{ctx.author.voice.channel.name}**!\nPlease disconnect me or stop the current song and try again.")
 
         # play video
-        player = await YTDLSource.from_url(URL, loop=self.bot.loop, stream=True)
+        player = await YTDLSource.from_url(query, loop=self.bot.loop, stream=True)
         ctx.author.guild.voice_client.play(player)
         return await ctx.send(f"Now playing: **{player.title}**")
 
