@@ -71,8 +71,8 @@ class Music(Cog):
         await ctx.respond()
 
         player = await YTDLSource.from_url(URL, loop=self.bot.loop, stream=True)
-        channel = ctx.author.voice.channel
-        voice_client = channel.guild.voice_client
+        channel = ctx.author.voice.channel or None
+        voice_client = channel.guild.voice_client or None
         
         # channel connection logic
         if not channel:
