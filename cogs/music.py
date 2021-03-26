@@ -83,10 +83,14 @@ class Music(Cog):
             await ctx.author.guild.voice_client.move_to(channel)
         else:
             await channel.connect()
+        
+        # already playing something
+        if ctx.author.guild.voice_client.is_playing():
+            ctx.send(f"I'm already playing something in **{channel.name}**!\nPlease disconnect me or stop the current song and try again.")
 
         # play video
         ctx.author.guild.voice_client.play(player)
-        await ctx.send(f"Now playing: **{player.title}**")
+        return await ctx.send(f"Now playing: **{player.title}**")
 
 def setup(bot) -> None:
     bot.add_cog(Music(bot))
