@@ -76,7 +76,7 @@ class Music(Cog):
         except AttributeError:
             channel = None
         try:
-            voice_client = channel.guild.voice_client
+            voice_client = ctx.author.guild.voice_client
         except AttributeError:
             voice_client = None
         
