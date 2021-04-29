@@ -59,14 +59,17 @@ class Utility(Cog):
     shutdown - restart Sekai.
     """
     @cog_ext.cog_slash(
-        name="restart",
-        description="Shutdown my mainframe. (Requires ownership.)",
+        name="shutdown",
+        description="Shutdown my mainframe. (Requires ownership)",
         guild_ids=config.guild_ids
     )
     @commands.is_owner()
-    async def _restart(self, ctx: SlashContext) -> SlashContext:
+    async def _shutdown(self, ctx: SlashContext) -> SlashContext:
         await ctx.respond()
         await ctx.send("Power failure, shutting down...")
+        # close all connections and logout
+        await self.bot.db.close()
+        await self.bot.request.close()
         await self.bot.logout()
     
 def setup(bot) -> None:
