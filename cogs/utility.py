@@ -14,8 +14,7 @@ class Utility(Cog):
     """
     @cog_ext.cog_slash(
         name="ping",
-        description="Get an accurate representation of latency between Sekai and Discord!",
-        guild_ids=config.guild_ids
+        description="Get an accurate representation of latency between Sekai and Discord!"
     )
     async def _ping(self, ctx: SlashContext) -> SlashContext:
         await ctx.respond()
@@ -28,8 +27,7 @@ class Utility(Cog):
     """
     @cog_ext.cog_slash(
         name="uptime",
-        description="Get Sekai's current total operation time!",
-        guild_ids=config.guild_ids
+        description="Get Sekai's current total operation time!"
     )
     async def _uptime(self, ctx: SlashContext) -> SlashContext:
         await ctx.respond()
@@ -46,8 +44,7 @@ class Utility(Cog):
     """
     @cog_ext.cog_slash(
         name="version",
-        description="Get Sekai's current development version!",
-        guild_ids=config.guild_ids
+        description="Get Sekai's current development version!"
     )
     async def _version(self, ctx: SlashContext) -> SlashContext:
         await ctx.respond()
@@ -60,8 +57,7 @@ class Utility(Cog):
     """
     @cog_ext.cog_slash(
         name="shutdown",
-        description="Shutdown my mainframe. (Requires ownership)",
-        guild_ids=config.guild_ids
+        description="Shutdown my mainframe. (Requires ownership)"
     )
     @commands.is_owner()
     async def _shutdown(self, ctx: SlashContext) -> SlashContext:

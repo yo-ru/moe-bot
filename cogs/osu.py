@@ -14,8 +14,7 @@ class Osu(Cog):
     """
     @cog_ext.cog_slash(
         name="lookup",
-        description="Look up your osu! profile!",
-        guild_ids=config.guild_ids
+        description="Look up your osu! profile!"
     )
     async def _lookup(self, ctx: SlashContext, profile: str, mode: str) -> SlashContext:
         await ctx.respond()
