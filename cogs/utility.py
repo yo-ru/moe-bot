@@ -63,7 +63,7 @@ class Utility(Cog):
         description="Shutdown my mainframe. (Requires ownership.)",
         guild_ids=config.guild_ids
     )
-    @commands.is_owner
+    @commands.is_owner()
     async def _restart(self, ctx: SlashContext) -> SlashContext:
         await ctx.respond()
         await ctx.send("Power failure, shutting down...")
