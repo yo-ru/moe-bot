@@ -1,4 +1,5 @@
 from datetime import datetime
+from discord.ext import commands
 from discord.ext.commands import Cog
 from discord_slash import SlashContext, cog_ext
 
@@ -51,6 +52,22 @@ class Utility(Cog):
     async def _version(self, ctx: SlashContext) -> SlashContext:
         await ctx.respond()
         return await ctx.send(f"I'm currently running version **{self.bot.version}**!\nCheck my GitHub page to see if my firmware is out of date!")
+
+    
+
+    """
+    shutdown - restart Sekai.
+    """
+    @cog_ext.cog_slash(
+        name="restart",
+        description="Shutdown my mainframe. (Requires ownership.)",
+        guild_ids=config.guild_ids
+    )
+    @commands.is_owner
+    async def _restart(self, ctx: SlashContext) -> SlashContext:
+        await ctx.respond()
+        await ctx.send("Power failure, shutting down...")
+        await self.bot.logout()
     
 def setup(bot) -> None:
     bot.add_cog(Utility(bot))
