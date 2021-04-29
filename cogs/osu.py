@@ -35,11 +35,14 @@ class Osu(Cog):
         # fetch results
         async with self.bot.request.get(url) as resp:
             json = await resp.json()
+
+            # request failed
             if not resp or not resp.ok or json == []:
                 if config.debug:
                     log("Osu: Failed to get api data: request failed.", Ansi.LRED)
                 return await ctx.send(f"Failed to fetch {profile}'s osu! profile!\nMake sure that you have entered their name correctly!")
 
+            # request success; send embed
             osu = json[0]
             embed=Embed(title=f":flag_{osu['country'].lower()}: {osu['username']} | {mode}", color=0xff94ed)
             embed.set_thumbnail(url=f"https://a.ppy.sh/{osu['user_id']}")
@@ -50,6 +53,8 @@ class Osu(Cog):
             embed.add_field(name="Total Score", value=f"{int(osu['total_score']):,}", inline=True)
             embed.add_field(name="Accuracy", value=f"{float(osu['accuracy']):.2f}%", inline=True)
             embed.add_field(name="Play Count", value=f"{int(osu['playcount']):,}", inline=True)
+            if config.debug:
+                log(f"Osu: Got api data: {osu['username']}", Ansi.LGREEN)
             return await ctx.send(embed=embed)
 
 def setup(bot) -> None:
