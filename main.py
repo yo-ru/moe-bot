@@ -4,9 +4,8 @@ import aiohttp
 from datetime import datetime
 from discord.ext.commands import Bot
 from discord_slash import SlashCommand
-from discord import Client, Activity, ActivityType
+from discord import Activity, ActivityType
 from cmyui import AsyncSQLPool, Version, Ansi, log
-from discord.ext.commands.errors import CommandNotFound
 
 import config
 
@@ -67,6 +66,22 @@ async def on_ready() -> None:
     log(f"Sekai has been logged in as {bot.user}.", Ansi.LBLUE)
     if config.debug:
         log(f"Running version {bot.version}!", Ansi.LBLUE)
+
+
+
+"""
+on_message() - tasks ran when a message is sent.
+"""
+@bot.event
+async def on_message(message) -> None:
+    # basic message logging to console
+    # NOTE: ignore bot and mentions
+    if message.author != bot.user and not message.content.startswith("<@!"):
+        log(f"[{message.guild.name} (#{message.channel.name})] {str(message.author)}: {message.content}", Ansi.LYELLOW)
+
+    # basic ping response
+    if bot.user.mentioned_in(message):
+        await message.channel.send(f"Hi, **{message.author.name}**, my name is **Sekai**!\nMy command prefix is **/**. Try typing it in chat to view my full commandset!")
 
 
 
