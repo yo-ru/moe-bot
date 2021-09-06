@@ -13,7 +13,9 @@ Invite Moe to your server!
 
 ## Available Commands
 ```
-/osulookup <profile> <mode> - look up user statistics for a specified osu! profile.
+/osu link <profile> - link osu! profile to discord.
+/osu unlink - unlink osu! profile from discord.
+/osu lookup <?profile> <?mode> - look up user statistics for a specified osu! profile.
 /ping - get an accurate representation of latency between Moe and Discord!
 /uptime - get Moe's current total operation time.
 /version - get Moe's current development version.
