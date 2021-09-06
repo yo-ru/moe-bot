@@ -1,6 +1,6 @@
 from typing import Union
 
-from discord import Embed
+from discord import Embed, guild
 from discord.activity import Game
 from ossapi.enums import GameMode
 from cmyui.logging import Ansi, log
@@ -14,10 +14,52 @@ class Osu(Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
-    
+    """
+    osulink - link your osu
+    TODO: use OAuth to link users' account
+    """
+    @cog_ext.cog_slash(
+        name="osulink",
+        description="Link your osu! profile to discord!",
+        options=[
+            create_option(
+                name="profile",
+                description="The osu! profile you are linking. This can your username or ID.",
+                option_type=3,
+                required=True
+            )
+        ]
+    )
+    async def _osulink(self, ctx: SlashContext, profile: Union[int, str]) -> SlashContext:
+        # osu! profile already linked
+        if await self.bot.db.fetch("SELECT 1 FROM osulink WHERE discordid = %s", ctx.author.id):
+            return await ctx.send("You already have an osu! profile linked!")
+
+        # check if osu! profile exists
+        try:
+            user = self.bot.osu.user(profile)
+        except ValueError:
+                return await ctx.send("I couldn't find that osu! profile!\nMake sure you spelled their **username** or entered their **ID** correctly!")
+        except:
+            return await ctx.send("An unknown error occured! Please report it to the developer!")
+        
+        # check if someone has already linked that osu! profile
+        if await self.bot.db.fetch("SELECT 1 FROM osulink WHERE osuid = %s", profile):
+            return await ctx.send(f"Someone has already linked the osu! profile, **{user.username}**, to their account!")
+        # store osulink
+        else:
+            await self.bot.db.execute(
+                "INSERT INTO osulink "
+                "(discordid, osuid, favoritemode) "
+                "VALUES (%s, %s, %s)",
+                [ctx.author.id, user.id, user.playmode]
+            )
+            return await ctx.send(f"Successfully linked the osu! profile, **{user.username}**, to discord!")  
+
+
 
     """
-    lookup - look up user statistics for a specified osu! profile.
+    osulookup - look up user statistics for a specified osu! profile.
     """
     @cog_ext.cog_slash(
         name="osulookup",
@@ -27,7 +69,7 @@ class Osu(Cog):
                 name="profile",
                 description="The osu! profile you are looking up. This can be their username or ID.",
                 option_type=3,
-                required=True
+                required=False
             ),
             create_option(
                 name="mode",
@@ -35,47 +77,68 @@ class Osu(Cog):
                 option_type=3,
                 required=False
             )
-        ]
+        ],
+        guild_ids=config.guild_ids
     )
-    async def _osulookup(self, ctx: SlashContext, profile: Union[int, str], mode: str = None) -> SlashContext:
-        # no mode specified; get favorite mode stats
-        if not mode:
-            # mode conversion dict
-            mode_conv = {
-                "osu": "osu!",
-                "taiko": "osu!taiko",
-                "fruits": "osu!catch",
-                "mania": "osu!mania"
-            }
+    async def _osulookup(self, ctx: SlashContext, profile: Union[int, str] = None, mode: str = None) -> SlashContext:
+        TO_API_CONV = {
+            "osu!": GameMode.STD,
+            "osu!taiko": GameMode.TAIKO,
+            "osu!catch": GameMode.CTB,
+            "osu!mania": GameMode.MANIA
+        }
 
+        FROM_API_CONV = {
+            "osu": "osu!",
+            "taiko": "osu!taiko",
+            "fruits": "osu!catch",
+            "mania": "osu!mania"
+        }
+
+        VALID_MODES = [
+            "osu!", 
+            "osu!taiko", 
+            "osu!catch", 
+            "osu!mania"
+        ]
+
+        # user has linked account
+        if not profile:
+            member = await self.bot.db.fetch("SELECT * FROM osulink WHERE discordid = %s", ctx.author.id)
+            if not member:
+                return await ctx.send("You don't have a osu! profile linked!\nLink one with **/osulink** or specifiy a username when using **/osulookup**!")
+
+            if mode:
+                if mode not in VALID_MODES:
+                    return await ctx.send("Invalid mode selection!\nValid modes are: **osu!**, **osu!taiko**, **osu!catch**, **osu!mania**.")
+
+                user = self.bot.osu.user(member['osuid'], TO_API_CONV.get(mode))
+            else:
+                user = self.bot.osu.user(member['osuid'], member['favoritemode'])
+                mode = FROM_API_CONV.get(member['favoritemode'])
+
+        # profile used; no mode
+        elif profile and not mode:
             # fetch user
             try:
-                playmode = self.bot.osu.user(profile).playmode
-                user = self.bot.osu.user(profile, playmode)
+                favoritemode = self.bot.osu.user(profile).playmode
+                user = self.bot.osu.user(profile, favoritemode)
             except ValueError:
                 return await ctx.send("I couldn't find that osu! profile!\nMake sure you spelled their **username** or entered their **ID** correctly!")
             except:
                return await ctx.send("An unknown error occured! Please report it to the developer!")
             
             # convert osu!api mode to fancy mode
-            mode = mode_conv.get(playmode)
-        # mode specified; get specified mode stats
+            mode = FROM_API_CONV.get(favoritemode)
+        # profile and mode used
         else:
             # check for user error
-            if mode not in ["osu!", "osu!taiko", "osu!catch", "osu!mania"]:
+            if mode not in VALID_MODES:
                 return await ctx.send("Invalid mode selection!\nValid modes are: **osu!**, **osu!taiko**, **osu!catch**, **osu!mania**.")
-
-            # mode conversion dict
-            mode_conv =  {
-                "osu!": GameMode.STD,
-                "osu!taiko": GameMode.TAIKO,
-                "osu!catch": GameMode.CTB,
-                "osu!mania": GameMode.MANIA
-            }
 
             # fetch user
             try:
-                user = self.bot.osu.user(profile, mode_conv.get(mode))
+                user = self.bot.osu.user(profile, TO_API_CONV.get(mode))
             except ValueError:
                 return await ctx.send("I couldn't find that osu! profile!\nMake sure you spelled their **username** or entered their **ID** correctly!")
             except:
