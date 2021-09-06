@@ -10,27 +10,25 @@ class Utility(Cog):
         self.bot = bot
 
     """
-    ping - get an accurate representation of latency between Sekai and Discord!
+    ping - get an accurate representation of latency between Moe and Discord!
     """
     @cog_ext.cog_slash(
         name="ping",
-        description="Get an accurate representation of latency between Sekai and Discord!"
+        description="Get an accurate representation of latency between Moe and Discord!"
     )
     async def _ping(self, ctx: SlashContext) -> SlashContext:
-        await ctx.respond()
         return await ctx.send(f"Pong! (**{self.bot.latency*1000:.2f}**ms)")
 
     
 
     """
-    uptime - get Sekai's current total operation time.
+    uptime - get Moe's current total operation time.
     """
     @cog_ext.cog_slash(
         name="uptime",
-        description="Get Sekai's current total operation time!"
+        description="Get Moe's current total operation time!"
     )
     async def _uptime(self, ctx: SlashContext) -> SlashContext:
-        await ctx.respond()
         delta = datetime.utcnow() - self.bot.start_time
         hours, rem = divmod(int(delta.total_seconds()), 3600)
         minutes, seconds = divmod(rem, 60)
@@ -40,20 +38,19 @@ class Utility(Cog):
 
 
     """
-    version - get Sekai's current development version.
+    version - get Moe's current development version.
     """
     @cog_ext.cog_slash(
         name="version",
-        description="Get Sekai's current development version!"
+        description="Get Moe's current development version!"
     )
     async def _version(self, ctx: SlashContext) -> SlashContext:
-        await ctx.respond()
         return await ctx.send(f"I'm currently running version **{self.bot.version}**!\nCheck my GitHub page to see if my firmware is out of date!")
 
     
 
     """
-    shutdown - restart Sekai.
+    shutdown - restart Moe.
     """
     @cog_ext.cog_slash(
         name="shutdown",
@@ -61,7 +58,6 @@ class Utility(Cog):
     )
     @commands.is_owner()
     async def _shutdown(self, ctx: SlashContext) -> SlashContext:
-        await ctx.respond()
         await ctx.send("Power failure, shutting down...")
         # close all connections and logout
         await self.bot.db.close()

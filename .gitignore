@@ -128,6 +128,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Sekai specific
+# Moe specific
 config.py
 .vscode/

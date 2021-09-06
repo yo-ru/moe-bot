@@ -11,7 +11,7 @@ import config
 
 """
 bot - our discord bot.
-bot.start_time - our initial start time of Sekai.
+bot.start_time - our initial start time of Moe.
 slash - integrated support for slash commands.
 """
 bot = Bot(command_prefix="") # NOTE: no bot prefix - we use slash commands
@@ -21,14 +21,14 @@ slash = SlashCommand(bot, sync_commands=True, override_type=True)
 
 
 """
-bot.version - current version of Sekai.
+bot.version - current version of Moe.
 """
 bot.version = Version(0, 1, 0)
 
 
 
 """
-cogs - load all external cogs for Sekai.
+cogs - load all external cogs for Moe.
 """
 for c in os.listdir("./cogs"):
     filename, ext = os.path.splitext(c)
@@ -44,7 +44,7 @@ for c in os.listdir("./cogs"):
 
 
 """
-on_ready() - tasks ran as soon as Sekai is ready.
+on_ready() - tasks ran as soon as Moe is ready.
 """
 @bot.event
 async def on_ready() -> None:
@@ -60,10 +60,10 @@ async def on_ready() -> None:
         log(f"Got Client Session!", Ansi.LGREEN)
 
     # set status
-    await bot.change_presence(activity=Activity(type=ActivityType.watching, name="\"Hello World\" on Netflix!"))
+    await bot.change_presence(activity=Activity(type=ActivityType.playing, name="\"Hello World\" on Netflix!"))
     
-    # Sekai ready
-    log(f"Sekai has been logged in as {bot.user}.", Ansi.LBLUE)
+    # Moe ready
+    log(f"Moe has been logged in as {bot.user}.", Ansi.LBLUE)
     if config.debug:
         log(f"Running version {bot.version}!", Ansi.LBLUE)
 
@@ -76,17 +76,17 @@ on_message() - tasks ran when a message is sent.
 async def on_message(message) -> None:
     # basic message logging to console
     # NOTE: ignore bot and mentions
-    if message.author != bot.user and not message.content.startswith("<@!"):
+    if message.author != bot.user and not "<@!" in message.content:
         log(f"[{message.guild.name} (#{message.channel.name})] {str(message.author)}: {message.content}", Ansi.LYELLOW)
 
     # basic ping response
     if bot.user.mentioned_in(message):
-        await message.channel.send(f"Hi, **{message.author.name}**, my name is **Sekai**!\nMy command prefix is **/**. Try typing it in chat to view my full commandset!")
+        await message.channel.send(f"Hi, **{message.author.name}**, my name is **Moe**!\nMy command prefix is **/**. Try typing it in chat to view my full commandset!")
 
 
 
 """
-run - run Sekai.
+run - run Moe.
 """
 if __name__ == "__main__":
     bot.run(config.token) # blocking call

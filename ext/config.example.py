@@ -1,6 +1,6 @@
 # mysql credentials.
 mysql = {
-    "db": "sekai",
+    "db": "moebot",
     "host": "localhost",
     "user": "yoru",
     "password": "changeme"
