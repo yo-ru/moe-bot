@@ -5,3 +5,4 @@ asyncio
 discord[voice]
 discord-py-interactions
 pynacl
+ossapi
