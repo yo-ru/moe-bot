@@ -1,9 +1,9 @@
-from typing import Optional, Union
+from typing import Union
 
 from discord import Embed
-from cmyui import Ansi, log
 from discord.activity import Game
 from ossapi.enums import GameMode
+from cmyui.logging import Ansi, log
 from discord.ext.commands import Cog
 from discord_slash import SlashContext, cog_ext
 from discord_slash.utils.manage_commands import create_option
@@ -55,7 +55,7 @@ class Osu(Cog):
             except ValueError:
                 return await ctx.send("I couldn't find that osu! profile!\nMake sure you spelled their **username** or entered their **ID** correctly!")
             except:
-                return await ctx.send("An unknown error occured! Please report it to the developer!")
+               return await ctx.send("An unknown error occured! Please report it to the developer!")
             
             # convert osu!api mode to fancy mode
             mode = mode_conv.get(playmode)
