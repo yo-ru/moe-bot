@@ -15,7 +15,7 @@ class Osu(Cog):
         self.bot = bot
 
     """
-    osulink - link your osu
+    osulink - link your osu! profile to discord
     TODO: use OAuth to link users' account
     """
     @cog_ext.cog_slash(
@@ -44,7 +44,7 @@ class Osu(Cog):
             return await ctx.send("An unknown error occured! Please report it to the developer!")
         
         # check if someone has already linked that osu! profile
-        if await self.bot.db.fetch("SELECT 1 FROM osulink WHERE osuid = %s", profile):
+        if await self.bot.db.fetch("SELECT 1 FROM osulink WHERE osuid = %s", user.id):
             return await ctx.send(f"Someone has already linked the osu! profile, **{user.username}**, to their account!")
         # store osulink
         else:
@@ -55,6 +55,22 @@ class Osu(Cog):
                 [ctx.author.id, user.id, user.playmode]
             )
             return await ctx.send(f"Successfully linked the osu! profile, **{user.username}**, to discord!")  
+
+
+
+    """
+    osuunlink - Unlink your osu! profile from discord
+    """
+    @cog_ext.cog_slash(
+        name="osuunlink",
+        description="Unlink your osu! profile from discord!",
+    )
+    async def _osuunlink(self, ctx: SlashContext) -> SlashContext:
+        if await self.bot.db.fetch("SELECT 1 FROM osulink WHERE discordid = %s", ctx.author.id):
+            await self.bot.db.execute("DELETE FROM osulink WHERE discordid = %s", ctx.author.id)
+            return await ctx.send("Successfully unlinked your osu! profile from discord!")
+        else:
+            return await ctx.send("You don't have an osu! profile linked to your discord!")
 
 
 
@@ -104,15 +120,18 @@ class Osu(Cog):
 
         # user has linked account
         if not profile:
+            # check if member has an osu! profile linked
             member = await self.bot.db.fetch("SELECT * FROM osulink WHERE discordid = %s", ctx.author.id)
             if not member:
                 return await ctx.send("You don't have a osu! profile linked!\nLink one with **/osulink** or specifiy a username when using **/osulookup**!")
 
+            # specified mode; get data
             if mode:
                 if mode not in VALID_MODES:
                     return await ctx.send("Invalid mode selection!\nValid modes are: **osu!**, **osu!taiko**, **osu!catch**, **osu!mania**.")
 
                 user = self.bot.osu.user(member.get("osuid"), TO_API_CONV.get(mode))
+            # unspecified mode; use favoritemode
             else:
                 user = self.bot.osu.user(member.get("osuid"), member.get("favoritemode"))
                 mode = FROM_API_CONV.get(member.get("favoritemode"))
