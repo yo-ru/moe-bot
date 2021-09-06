@@ -1,5 +1,6 @@
 from datetime import datetime
 from discord.ext import commands
+from cmyui.logging import Ansi, log
 from discord.ext.commands import Cog
 from discord_slash import SlashContext, cog_ext
 
@@ -59,6 +60,7 @@ class Utility(Cog):
     @commands.is_owner()
     async def _shutdown(self, ctx: SlashContext) -> SlashContext:
         await ctx.send("Power failure, shutting down...")
+        log("\nShutting down...", Ansi.LRED)
         # close all connections and logout
         await self.bot.db.close()
         await self.bot.request.close()

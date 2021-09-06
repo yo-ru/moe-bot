@@ -33,7 +33,7 @@ NOTE:
     - minor: command changes/new features
     - patch: typo fixes/bug fixes
 """
-bot.version = Version(1, 0, 0)
+bot.version = Version(1, 0, 1)
 
 
 
