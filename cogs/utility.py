@@ -62,7 +62,7 @@ class Utility(Cog):
         # close all connections and logout
         await self.bot.db.close()
         await self.bot.request.close()
-        await self.bot.logout()
+        await self.bot.close()
     
 def setup(bot) -> None:
     bot.add_cog(Utility(bot))
