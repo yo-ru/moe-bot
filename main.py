@@ -32,16 +32,18 @@ bot.version = Version(0, 1, 0)
 """
 cogs - load all external cogs for Moe.
 """
+log("--- Start Cogs ---", Ansi.MAGENTA)
 for c in os.listdir("./cogs"):
     filename, ext = os.path.splitext(c)
     try:
         if filename != "__pycache__":
             bot.load_extension(f"cogs.{filename}")
             if config.debug:
-                log(f"Successfully loaded cog: cog.{filename}!", Ansi.LGREEN)
+                log(f"Loaded cog: cog.{filename}!", Ansi.LGREEN)
     except:
         log(f"Failed to load cog: cog.{filename}!", Ansi.LRED)
         continue
+log("--- End Cogs ---\n", Ansi.MAGENTA)
 
 
 
@@ -50,25 +52,51 @@ on_ready() - tasks ran as soon as Moe is ready.
 """
 @bot.event
 async def on_ready() -> None:
+    log("--- Start Tasks ---", Ansi.MAGENTA)
     # connect to mysql
-    bot.db = AsyncSQLPool()
-    await bot.db.connect(config.mysql)
-    if config.debug:
-        log(f"Connected to MySQL!", Ansi.LGREEN)
+    try:
+        bot.db = AsyncSQLPool()
+        await bot.db.connect(config.mysql)
+        if config.debug:
+            log("Connected to MySQL!", Ansi.LGREEN)
+    except:
+        log("Failed to connect to MySQL!", Ansi.LRED)
+        log("--- End Tasks ---\n", Ansi.MAGENTA)
+        exit(1) # NOTE: Moe loses a lot of functionality without mysql; stop execution
 
-    # get client session
-    bot.request = aiohttp.ClientSession(json_serialize=orjson.dumps)
-    if config.debug:
-        log(f"Got Client Session!", Ansi.LGREEN)
+    # create the client session
+    try:
+        bot.request = aiohttp.ClientSession(json_serialize=orjson.dumps)
+        if config.debug:
+            log("Created the Client Session!", Ansi.LGREEN)
+    except:
+        log("Failed to get the Client Session!", Ansi.LRED)
+        log("--- End Tasks ---\n", Ansi.MAGENTA)
+        exit(1) # NOTE: Moe loses a lot of functionality without the client session; stop execution
 
     # authorize with the osu!api
-    bot.osu = OssapiV2(client_id=config.osu.get("id"), client_secret=config.osu.get("secret"))
-    if config.debug:
-        log(f"Authorized with the osu!api!", Ansi.LGREEN)
+    try:
+        bot.osu = OssapiV2(client_id=config.osu.get("id"), client_secret=config.osu.get("secret"))
+        if config.debug:
+            log("Authorized with the osu!api!", Ansi.LGREEN)
+    except:
+        bot.unload_extension("cogs.osu")
+        log("Failed to authorize with the osu!api! (Unloaded osu.cog!)", Ansi.LRED)
 
-    # set status
-    await bot.change_presence(activity=Activity(type=ActivityType.playing, name=f"with {f'{len(bot.users):,} users' if len(bot.users) > 1 else 'a user'} in {f'{len(bot.guilds):,} guilds' if len(bot.guilds) > 1 else 'a guild'}."))
-    
+    # set presence
+    try:
+        if config.debug:
+            log("Presence set!", Ansi.LGREEN)
+        await bot.change_presence(
+            activity=Activity(
+                type=ActivityType.playing, 
+                name=f"with {f'{len(bot.users):,} users' if len(bot.users) > 1 else 'a user'} in {f'{len(bot.guilds):,} guilds' if len(bot.guilds) > 1 else 'a guild'}."
+            )
+        )
+    except:
+        log("Failed to set Presence!", Ansi.LRED)
+    log("--- End Tasks ---\n", Ansi.MAGENTA)
+
     # Moe ready
     log(f"Moe has been logged in as {bot.user}.", Ansi.LBLUE)
     if config.debug:
