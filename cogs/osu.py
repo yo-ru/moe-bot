@@ -112,10 +112,10 @@ class Osu(Cog):
                 if mode not in VALID_MODES:
                     return await ctx.send("Invalid mode selection!\nValid modes are: **osu!**, **osu!taiko**, **osu!catch**, **osu!mania**.")
 
-                user = self.bot.osu.user(member['osuid'], TO_API_CONV.get(mode))
+                user = self.bot.osu.user(member.get("osuid"), TO_API_CONV.get(mode))
             else:
-                user = self.bot.osu.user(member['osuid'], member['favoritemode'])
-                mode = FROM_API_CONV.get(member['favoritemode'])
+                user = self.bot.osu.user(member.get("osuid"), member.get("favoritemode"))
+                mode = FROM_API_CONV.get(member.get("favoritemode"))
 
         # profile used; no mode
         elif profile and not mode:
