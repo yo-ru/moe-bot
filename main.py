@@ -2,9 +2,11 @@ import os
 import orjson
 import aiohttp
 from datetime import datetime
+
 from discord.ext.commands import Bot
 from discord_slash import SlashCommand
-from discord import Activity, ActivityType
+from discord import Activity, ActivityType, Intents
+from ossapi import OssapiV2
 from cmyui import AsyncSQLPool, Version, Ansi, log
 
 import config
@@ -14,7 +16,7 @@ bot - our discord bot.
 bot.start_time - our initial start time of Moe.
 slash - integrated support for slash commands.
 """
-bot = Bot(command_prefix="") # NOTE: no bot prefix - we use slash commands
+bot = Bot(command_prefix="", intents=Intents.all()) # NOTE: no bot prefix - we use slash commands
 bot.start_time = datetime.utcnow()
 slash = SlashCommand(bot, sync_commands=True, override_type=True)
 
@@ -59,8 +61,13 @@ async def on_ready() -> None:
     if config.debug:
         log(f"Got Client Session!", Ansi.LGREEN)
 
+    # authorize with the osu!api
+    bot.osu = OssapiV2(client_id=config.osu.get("id"), client_secret=config.osu.get("secret"))
+    if config.debug:
+        log(f"Authorized with the osu!api!", Ansi.LGREEN)
+
     # set status
-    await bot.change_presence(activity=Activity(type=ActivityType.playing, name="\"Hello World\" on Netflix!"))
+    await bot.change_presence(activity=Activity(type=ActivityType.playing, name=f"with {f'{len(bot.users):,} users' if len(bot.users) > 1 else 'a user'} in {f'{len(bot.guilds):,} guilds' if len(bot.guilds) > 1 else 'a guild'}."))
     
     # Moe ready
     log(f"Moe has been logged in as {bot.user}.", Ansi.LBLUE)
