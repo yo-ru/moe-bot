@@ -13,16 +13,14 @@ class Osu(Cog):
     lookup - look up user statistics for a specified osu! profile.
     """
     @cog_ext.cog_slash(
-        name="lookup",
+        name="osulookup",
         description="Look up your osu! profile!"
     )
-    async def _lookup(self, ctx: SlashContext, profile: str, mode: str) -> SlashContext:
-        await ctx.respond()
-
+    async def _osulookup(self, ctx: SlashContext, profile: str, mode: str) -> SlashContext:
         # build url
         url = f"https://osu.ppy.sh/api/get_user?k={config.osu_api_key}&u={profile}"
         if mode not in ["osu!", "osu!taiko", "osu!catch", "osu!mania"]:
-            return await ctx.send(f"Invalid mode selection!\nValid modes are: osu!, osu!taiko, osu!catch, osu!mania.")
+            return await ctx.send("Invalid mode selection!\nValid modes are: osu!, osu!taiko, osu!catch, osu!mania.")
         mode_conv =  {
             "osu!": 0,
             "osu!taiko": 1,
