@@ -15,11 +15,12 @@ class Osu(Cog):
         self.bot = bot
 
     """
-    osulink - link your osu! profile to discord
+    link - link your osu! profile to discord
     TODO: use OAuth to link users' account
     """
-    @cog_ext.cog_slash(
-        name="osulink",
+    @cog_ext.cog_subcommand(
+        base="osu",
+        name="link",
         description="Link your osu! profile to discord!",
         options=[
             create_option(
@@ -30,7 +31,7 @@ class Osu(Cog):
             )
         ]
     )
-    async def _osulink(self, ctx: SlashContext, profile: Union[int, str]) -> SlashContext:
+    async def _link(self, ctx: SlashContext, profile: Union[int, str]) -> SlashContext:
         # osu! profile already linked
         if await self.bot.db.fetch("SELECT 1 FROM osulink WHERE discordid = %s", ctx.author.id):
             return await ctx.send("You already have an osu! profile linked!")
@@ -59,13 +60,14 @@ class Osu(Cog):
 
 
     """
-    osuunlink - Unlink your osu! profile from discord
+    unlink - Unlink your osu! profile from discord
     """
-    @cog_ext.cog_slash(
-        name="osuunlink",
-        description="Unlink your osu! profile from discord!",
+    @cog_ext.cog_subcommand(
+        base="osu",
+        name="unlink",
+        description="Unlink your osu! profile from discord!"
     )
-    async def _osuunlink(self, ctx: SlashContext) -> SlashContext:
+    async def _unlink(self, ctx: SlashContext) -> SlashContext:
         if await self.bot.db.fetch("SELECT 1 FROM osulink WHERE discordid = %s", ctx.author.id):
             await self.bot.db.execute("DELETE FROM osulink WHERE discordid = %s", ctx.author.id)
             return await ctx.send("Successfully unlinked your osu! profile from discord!")
@@ -77,8 +79,9 @@ class Osu(Cog):
     """
     osulookup - look up user statistics for a specified osu! profile.
     """
-    @cog_ext.cog_slash(
-        name="osulookup",
+    @cog_ext.cog_subcommand(
+        base="osu",
+        name="lookup",
         description="Look up your osu! profile!",
         options=[
             create_option(
@@ -93,10 +96,9 @@ class Osu(Cog):
                 option_type=3,
                 required=False
             )
-        ],
-        guild_ids=config.guild_ids
+        ]
     )
-    async def _osulookup(self, ctx: SlashContext, profile: Union[int, str] = None, mode: str = None) -> SlashContext:
+    async def _lookup(self, ctx: SlashContext, profile: Union[int, str] = None, mode: str = None) -> SlashContext:
         TO_API_CONV = {
             "osu!": GameMode.STD,
             "osu!taiko": GameMode.TAIKO,
@@ -123,7 +125,7 @@ class Osu(Cog):
             # check if member has an osu! profile linked
             member = await self.bot.db.fetch("SELECT * FROM osulink WHERE discordid = %s", ctx.author.id)
             if not member:
-                return await ctx.send("You don't have a osu! profile linked!\nLink one with **/osulink** or specifiy a username when using **/osulookup**!")
+                return await ctx.send("You don't have a osu! profile linked!\nLink one with **/osu link** or specifiy a username when using **/osulookup**!")
 
             # specified mode; get data
             if mode:
