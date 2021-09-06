@@ -28,8 +28,12 @@ slash = SlashCommand(bot, sync_commands=True, override_type=True)
 
 """
 bot.version - current version of Moe.
+NOTE:
+    - major: breaking changes/new command sets
+    - minor: command changes/new features
+    - patch: typo fixes/bug fixes
 """
-bot.version = Version(0, 1, 0)
+bot.version = Version(1, 0, 0)
 
 
 
@@ -76,6 +80,7 @@ async def on_ready() -> None:
     except:
         log("Failed to get the Client Session!", Ansi.LRED)
         log("--- End Tasks ---\n", Ansi.MAGENTA)
+        bot.db.close() # safely close db connection
         exit(1) # NOTE: Moe loses a lot of functionality without the client session; stop execution
 
     # authorize with the osu!api
