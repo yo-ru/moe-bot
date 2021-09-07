@@ -14,6 +14,27 @@ class Osu(Cog):
     def __init__(self, bot) -> None:
         self.bot = bot
 
+        self.TO_API_CONV = {
+            "osu!": GameMode.STD,
+            "osu!taiko": GameMode.TAIKO,
+            "osu!catch": GameMode.CTB,
+            "osu!mania": GameMode.MANIA
+        }
+
+        self.FROM_API_CONV = {
+            "osu": "osu!",
+            "taiko": "osu!taiko",
+            "fruits": "osu!catch",
+            "mania": "osu!mania"
+        }
+
+        self.VALID_MODES = [
+            "osu!", 
+            "osu!taiko", 
+            "osu!catch", 
+            "osu!mania"
+        ]
+
     """
     link - link your osu! profile to discord
     TODO: use OAuth to link users' account
@@ -60,7 +81,7 @@ class Osu(Cog):
 
 
     """
-    unlink - Unlink your osu! profile from discord
+    unlink - unlink your osu! profile from discord
     """
     @cog_ext.cog_subcommand(
         base="osu",
@@ -77,7 +98,7 @@ class Osu(Cog):
 
 
     """
-    osulookup - look up user statistics for a specified osu! profile.
+    lookup - look up user statistics for a specified osu! profile.
     """
     @cog_ext.cog_subcommand(
         base="osu",
@@ -99,44 +120,23 @@ class Osu(Cog):
         ]
     )
     async def _lookup(self, ctx: SlashContext, profile: Union[int, str] = None, mode: str = None) -> SlashContext:
-        TO_API_CONV = {
-            "osu!": GameMode.STD,
-            "osu!taiko": GameMode.TAIKO,
-            "osu!catch": GameMode.CTB,
-            "osu!mania": GameMode.MANIA
-        }
-
-        FROM_API_CONV = {
-            "osu": "osu!",
-            "taiko": "osu!taiko",
-            "fruits": "osu!catch",
-            "mania": "osu!mania"
-        }
-
-        VALID_MODES = [
-            "osu!", 
-            "osu!taiko", 
-            "osu!catch", 
-            "osu!mania"
-        ]
-
         # user has linked account
         if not profile:
             # check if member has an osu! profile linked
             member = await self.bot.db.fetch("SELECT * FROM osulink WHERE discordid = %s", ctx.author.id)
             if not member:
-                return await ctx.send("You don't have a osu! profile linked!\nLink one with **/osu link** or specifiy a username when using **/osulookup**!")
+                return await ctx.send("You don't have a osu! profile linked!\nLink one with **/osu link** or specifiy a username when using **/osu lookup**!")
 
             # specified mode; get data
             if mode:
-                if mode not in VALID_MODES:
+                if mode not in self.VALID_MODES:
                     return await ctx.send("Invalid mode selection!\nValid modes are: **osu!**, **osu!taiko**, **osu!catch**, **osu!mania**.")
 
-                user = self.bot.osu.user(member.get("osuid"), TO_API_CONV.get(mode))
+                user = self.bot.osu.user(member.get("osuid"), self.TO_API_CONV.get(mode))
             # unspecified mode; use favoritemode
             else:
                 user = self.bot.osu.user(member.get("osuid"), member.get("favoritemode"))
-                mode = FROM_API_CONV.get(member.get("favoritemode"))
+                mode = self.FROM_API_CONV.get(member.get("favoritemode"))
 
         # profile used; no mode
         elif profile and not mode:
@@ -150,16 +150,16 @@ class Osu(Cog):
                return await ctx.send("An unknown error occured! Please report it to the developer!")
             
             # convert osu!api mode to fancy mode
-            mode = FROM_API_CONV.get(favoritemode)
+            mode = self.FROM_API_CONV.get(favoritemode)
         # profile and mode used
         else:
             # check for user error
-            if mode not in VALID_MODES:
+            if mode not in self.VALID_MODES:
                 return await ctx.send("Invalid mode selection!\nValid modes are: **osu!**, **osu!taiko**, **osu!catch**, **osu!mania**.")
 
             # fetch user
             try:
-                user = self.bot.osu.user(profile, TO_API_CONV.get(mode))
+                user = self.bot.osu.user(profile, self.TO_API_CONV.get(mode))
             except ValueError:
                 return await ctx.send("I couldn't find that osu! profile!\nMake sure you spelled their **username** or entered their **ID** correctly!")
             except:
