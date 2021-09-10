@@ -21,6 +21,7 @@ class Osu(Cog):
             "osu!mania": GameMode.MANIA
         }
 
+        # NOTE: for some reason the key of a dict cannot be an enum, but it's value can??
         self.FROM_API_CONV = {
             "osu": "osu!",
             "taiko": "osu!taiko",

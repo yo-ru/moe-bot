@@ -29,11 +29,11 @@ slash = SlashCommand(bot, sync_commands=True, override_type=True)
 """
 bot.version - current version of Moé.
 NOTE:
-    - major: breaking changes/new command sets
+    - major: breaking changes
     - minor: command changes/new features
     - patch: typo fixes/bug fixes
 """
-bot.version = Version(1, 0, 3)
+bot.version = Version(1, 1, 3)
 
 
 

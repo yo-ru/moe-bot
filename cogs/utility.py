@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from discord.ext import commands
 from cmyui.logging import Ansi, log
 from discord.ext.commands import Cog
@@ -47,24 +48,6 @@ class Utility(Cog):
     )
     async def _version(self, ctx: SlashContext) -> SlashContext:
         return await ctx.send(f"I'm currently running version **{self.bot.version}**!\nCheck my GitHub page to see if my firmware is out of date!")
-
-    
-
-    """
-    shutdown - restart Moé.
-    """
-    @cog_ext.cog_slash(
-        name="shutdown",
-        description="Shutdown my mainframe. (Requires ownership)"
-    )
-    @commands.is_owner()
-    async def _shutdown(self, ctx: SlashContext) -> SlashContext:
-        await ctx.send("Power failure, shutting down...")
-        log("\nShutting down...", Ansi.LRED)
-        # close all connections and logout
-        await self.bot.db.close()
-        await self.bot.request.close()
-        await self.bot.close()
     
 def setup(bot) -> None:
     bot.add_cog(Utility(bot))
