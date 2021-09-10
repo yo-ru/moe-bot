@@ -11,11 +11,11 @@ class Utility(Cog):
         self.bot = bot
 
     """
-    ping - get an accurate representation of latency between Moe and Discord!
+    ping - get an accurate representation of latency between Moé and Discord!
     """
     @cog_ext.cog_slash(
         name="ping",
-        description="Get an accurate representation of latency between Moe and Discord!"
+        description="Get an accurate representation of latency between Moé and Discord!"
     )
     async def _ping(self, ctx: SlashContext) -> SlashContext:
         return await ctx.send(f"Pong! (**{self.bot.latency*1000:.2f}**ms)")
@@ -23,11 +23,11 @@ class Utility(Cog):
     
 
     """
-    uptime - get Moe's current total operation time.
+    uptime - get Moé's current total operation time.
     """
     @cog_ext.cog_slash(
         name="uptime",
-        description="Get Moe's current total operation time!"
+        description="Get Moé's current total operation time!"
     )
     async def _uptime(self, ctx: SlashContext) -> SlashContext:
         delta = datetime.utcnow() - self.bot.start_time
@@ -39,11 +39,11 @@ class Utility(Cog):
 
 
     """
-    version - get Moe's current development version.
+    version - get Moé's current development version.
     """
     @cog_ext.cog_slash(
         name="version",
-        description="Get Moe's current development version!"
+        description="Get Moé's current development version!"
     )
     async def _version(self, ctx: SlashContext) -> SlashContext:
         return await ctx.send(f"I'm currently running version **{self.bot.version}**!\nCheck my GitHub page to see if my firmware is out of date!")
@@ -51,7 +51,7 @@ class Utility(Cog):
     
 
     """
-    shutdown - restart Moe.
+    shutdown - restart Moé.
     """
     @cog_ext.cog_slash(
         name="shutdown",

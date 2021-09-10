@@ -17,7 +17,7 @@ import config
 
 """
 bot - our discord bot.
-bot.start_time - our initial start time of Moe.
+bot.start_time - our initial start time of Moé.
 slash - integrated support for slash commands.
 """
 bot = Bot(command_prefix="", intents=Intents.all()) # NOTE: no bot prefix - we use slash commands
@@ -27,18 +27,18 @@ slash = SlashCommand(bot, sync_commands=True, override_type=True)
 
 
 """
-bot.version - current version of Moe.
+bot.version - current version of Moé.
 NOTE:
     - major: breaking changes/new command sets
     - minor: command changes/new features
     - patch: typo fixes/bug fixes
 """
-bot.version = Version(1, 0, 2)
+bot.version = Version(1, 0, 3)
 
 
 
 """
-cogs - load all external cogs for Moe.
+cogs - load all external cogs for Moé.
 """
 log("--- Start Cogs ---", Ansi.MAGENTA)
 for c in os.listdir("./cogs"):
@@ -56,7 +56,7 @@ log("--- End Cogs ---\n", Ansi.MAGENTA)
 
 
 """
-on_ready() - tasks ran as soon as Moe is ready.
+on_ready() - tasks ran as soon as Moé is ready.
 """
 @bot.event
 async def on_ready() -> None:
@@ -70,7 +70,7 @@ async def on_ready() -> None:
     except:
         log("Failed to connect to MySQL!", Ansi.LRED)
         log("--- End Tasks ---\n", Ansi.MAGENTA)
-        exit(1) # NOTE: Moe loses a lot of functionality without mysql; stop execution
+        exit(1) # NOTE: Moé loses a lot of functionality without mysql; stop execution
 
     # create the client session
     try:
@@ -81,7 +81,7 @@ async def on_ready() -> None:
         log("Failed to get the Client Session!", Ansi.LRED)
         log("--- End Tasks ---\n", Ansi.MAGENTA)
         bot.db.close() # safely close db connection
-        exit(1) # NOTE: Moe loses a lot of functionality without the client session; stop execution
+        exit(1) # NOTE: Moé loses a lot of functionality without the client session; stop execution
 
     # authorize with the osu!api
     try:
@@ -106,8 +106,8 @@ async def on_ready() -> None:
         log("Failed to set Presence!", Ansi.LRED)
     log("--- End Tasks ---\n", Ansi.MAGENTA)
 
-    # Moe ready
-    log(f"Moe has been logged in as {bot.user}.", Ansi.LBLUE)
+    # Moé ready
+    log(f"Moé has been logged in as {bot.user}.", Ansi.LBLUE)
     if config.debug:
         log(f"Running version {bot.version}!", Ansi.LBLUE)
 
@@ -125,12 +125,12 @@ async def on_message(message) -> None:
 
     # basic ping response
     if bot.user.mentioned_in(message):
-        await message.channel.send(f"Hi, **{message.author.name}**, my name is **Moe**!\nMy command prefix is **/**. Try typing it in chat to view my full commandset!")
+        await message.channel.send(f"Hi, **{message.author.name}**, my name is **Moé**!\nMy command prefix is **/**. Try typing it in chat to view my full commandset!")
 
 
 
 """
-run - run Moe.
+run - run Moé.
 """
 if __name__ == "__main__":
     bot.run(config.token) # blocking call
