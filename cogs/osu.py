@@ -1,6 +1,3 @@
-import re
-from typing import Union
-
 import nextcord
 from ossapi.enums import GameMode
 from nextcord.activity import Game
