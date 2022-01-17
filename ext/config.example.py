@@ -1,16 +1,19 @@
 # mysql credentials.
 mysql = {
-    "db": "Moébot",
+    "db": "Moebot",
     "host": "localhost",
     "user": "yoru",
     "password": "changeme"
 }
 
 # discord application token.
-token = ""
+token = "12345678912345678912345678912345678912345678912345678912345"
 
-# osu api key.
-osu_api_key = ""
+# osu api credentials.
+osu = {
+    "id": "9558",
+    "secret": "1234567891234567891234567891234567891234"
+}
 
 # development.
 debug = False
