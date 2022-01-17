@@ -4,7 +4,7 @@ Using the latest feature set of Discord's API, Moé is capable of using slash co
 
 ## Invite
 Invite Moé to your server!  
-#### [Invite Link](https://discord.com/api/oauth2/authorize?client_id=884239130173779968&permissions=260382392279&scope=bot%20applications.commands)
+#### [Invite Link](https://discord.com/api/oauth2/authorize?client_id=884239130173779968&permissions=1634738372567&scope=bot%20applications.commands)
 
 ## Features
 * Slash commands.

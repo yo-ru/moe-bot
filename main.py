@@ -7,9 +7,8 @@ from ossapi import OssapiV2
 from cmyui.version import Version
 from cmyui.logging import Ansi, log
 from cmyui.mysql import AsyncSQLPool
-from discord.ext.commands import Bot
-from discord_slash import SlashCommand
-from discord import Activity, ActivityType, Intents
+from nextcord.ext.commands import Bot
+from nextcord import Activity, ActivityType, Intents
 
 
 
@@ -18,11 +17,9 @@ import config
 """
 bot - our discord bot.
 bot.start_time - our initial start time of Moé.
-slash - integrated support for slash commands.
 """
 bot = Bot(command_prefix="", intents=Intents.all()) # NOTE: no bot prefix - we use slash commands
 bot.start_time = datetime.utcnow()
-slash = SlashCommand(bot, sync_commands=True, override_type=True)
 
 
 
@@ -33,7 +30,7 @@ NOTE:
     - minor: command changes/new features
     - patch: typo fixes/bug fixes
 """
-bot.version = Version(1, 1, 3)
+bot.version = Version(2, 1, 3)
 
 
 
@@ -48,8 +45,10 @@ for c in os.listdir("./cogs"):
             bot.load_extension(f"cogs.{filename}")
             if config.debug:
                 log(f"Loaded cog: cog.{filename}!", Ansi.LGREEN)
-    except:
+    except Exception as ex:
         log(f"Failed to load cog: cog.{filename}!", Ansi.LRED)
+        if config.debug:
+            log(f"{ex}", Ansi.LRED)
         continue
 log("--- End Cogs ---\n", Ansi.MAGENTA)
 
