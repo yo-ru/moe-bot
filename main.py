@@ -10,8 +10,6 @@ from cmyui.mysql import AsyncSQLPool
 from nextcord.ext.commands import Bot
 from nextcord import Activity, ActivityType, Intents
 
-
-
 import config
 
 """
