@@ -16,8 +16,10 @@ Invite Moé to your server!
 /osu link <profile> - link osu! profile to discord.
 /osu unlink - unlink osu! profile from discord.
 /osu lookup <?profile> <?mode> - look up user statistics for a specified osu! profile.
-/ping - get an accurate representation of latency between Moé and Discord!
-/uptime - get Moé's current total operation time.
-/version - get Moé's current development version.
-/shutdown - shutdown Moé. (Requires ownership.)
+
+/util ping - get an accurate representation of latency between Moé and Discord!
+/util uptime - get Moé's current total operation time.
+/util version - get Moé's current development version.
+
+TODO: /owner shutdown - shutdown Moé. (Requires ownership.)
 ```
