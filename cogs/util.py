@@ -1,5 +1,5 @@
-import datetime
 import nextcord
+from datetime import datetime
 from nextcord.activity import Game
 from cmyui.logging import Ansi, log
 from nextcord.ext.commands import Cog
