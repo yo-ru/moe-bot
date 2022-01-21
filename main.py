@@ -117,9 +117,14 @@ on_message() - tasks ran when a message is sent.
 """
 @bot.event
 async def on_message(message) -> None:
+    # ignore bot
+    if message.author == bot.user:
+        return
+    if message.mention_everyone:
+        return
+
     # basic message logging to console
-    # NOTE: ignore bot and mentions
-    if message.author != bot.user and not "<@!" in message.content:
+    if not "<@!" in message.content:
         log(f"[{message.guild.name} (#{message.channel.name})] {str(message.author)}: {message.content}", Ansi.LYELLOW)
 
     # basic ping response
