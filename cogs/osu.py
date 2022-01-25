@@ -5,7 +5,6 @@ from cmyui.logging import Ansi, log
 from nextcord.ext.commands import Cog
 from nextcord import Embed, Interaction, SlashOption
 
-
 import config
 
 class Osu(Cog):
@@ -34,9 +33,13 @@ class Osu(Cog):
             "osu!mania"
         ]
 
+
+
+    """
+    osu - the base osu command.
+    """
     @nextcord.slash_command(
-        name="osu",
-        force_global=True
+        name="osu"
     )
     async def _osu(
         self, 
@@ -44,9 +47,11 @@ class Osu(Cog):
         ):
         ...
 
+
+
     """
-    link - link your osu! profile to discord
-    TODO: use OAuth to link users' account
+    link - link your osu! profile to discord.
+    TODO: use OAuth to link users' account.
     """
 
     @_osu.subcommand(
@@ -91,7 +96,7 @@ class Osu(Cog):
 
 
     """
-    unlink - unlink your osu! profile from discord
+    unlink - unlink your osu! profile from discord.
     """
     @_osu.subcommand(
         name="unlink",

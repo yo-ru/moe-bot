@@ -1,13 +1,10 @@
 import os
-import orjson
-import aiohttp
 from datetime import datetime
 
+from nextcord import Intents
 from cmyui.version import Version
 from cmyui.logging import Ansi, log
-from cmyui.mysql import AsyncSQLPool
 from nextcord.ext.commands import Bot
-from nextcord import Activity, ActivityType, Intents
 
 import util
 import config
@@ -28,7 +25,7 @@ NOTE:
     - minor: command changes/new features
     - patch: typo fixes/bug fixes
 """
-bot.version = Version(2, 1, 4)
+bot.version = Version(2, 3, 4)
 
 
 
@@ -123,9 +120,14 @@ on_message() - tasks ran when a message is sent.
 """
 @bot.event
 async def on_message(message) -> None:
+    # ignore bot
+    if message.author == bot.user:
+        return
+    if message.mention_everyone:
+        return
+
     # basic message logging to console
-    # NOTE: ignore bot and mentions
-    if message.author != bot.user and not "<@!" in message.content:
+    if not "<@!" in message.content:
         log(f"[{message.guild.name} (#{message.channel.name})] {str(message.author)}: {message.content}", Ansi.LYELLOW)
 
     # basic ping response
