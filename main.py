@@ -118,7 +118,7 @@ async def on_ready() -> None:
 """
 on_message() - tasks ran when a message is sent.
 """
-@bot.listen()
+@bot.event()
 async def on_message(message) -> None:
     # ignore bot
     if message.author == bot.user:
