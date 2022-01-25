@@ -79,10 +79,10 @@ async def on_guild_join(guild) -> None:
 
 
 """
-on_guild_leave() - tasks ran when the bot leaves a guild.
+on_guild_remove() - tasks ran when the bot is removed from a guild.
 """
 @bot.listen()
-async def on_guild_leave(guild) -> None:
+async def on_guild_remove(guild) -> None:
     # update bot presence
     await util.update_presence(bot)
 
