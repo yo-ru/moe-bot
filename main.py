@@ -51,7 +51,7 @@ log("--- End Cogs ---\n", Ansi.MAGENTA)
 """
 on_member_join() - tasks ran as soon as a player joins a guild.
 """
-@bot.event
+@bot.listen()
 async def on_member_join(member) -> None:
     # update bot presence
     await util.update_presence(bot)
@@ -61,7 +61,7 @@ async def on_member_join(member) -> None:
 """
 on_member_leave() - tasks ran as soon as a player leaves a guild.
 """
-@bot.event
+@bot.listen()
 async def on_member_leave(member) -> None:
     # update bot presence
     await util.update_presence(bot)
@@ -81,7 +81,7 @@ async def on_guild_join() -> None:
 """
 on_guild_leave() - tasks ran when the bot leaves a guild.
 """
-@bot.event
+@bot.listen()
 async def on_guild_leave() -> None:
     # update bot presence
     await util.update_presence(bot)
@@ -91,7 +91,7 @@ async def on_guild_leave() -> None:
 """
 on_ready() - tasks ran as soon as Moé is ready.
 """
-@bot.event
+@bot.listen()
 async def on_ready() -> None:
     log("--- Start Tasks ---", Ansi.MAGENTA)
     # connect to mysql
@@ -118,7 +118,7 @@ async def on_ready() -> None:
 """
 on_message() - tasks ran when a message is sent.
 """
-@bot.event
+@bot.listen()
 async def on_message(message) -> None:
     # ignore bot
     if message.author == bot.user:
