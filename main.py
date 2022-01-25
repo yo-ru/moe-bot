@@ -13,7 +13,7 @@ import config
 bot - our discord bot.
 bot.start_time - our initial start time of Moé.
 """
-bot = Bot(command_prefix="", intents=Intents.all()) # NOTE: no bot prefix - we use slash commands
+bot = Bot(command_prefix=[], intents=Intents.all()) # NOTE: no bot prefix - we use slash commands
 bot.start_time = datetime.utcnow()
 
 
