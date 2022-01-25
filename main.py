@@ -71,7 +71,7 @@ async def on_member_leave(member) -> None:
 """
 on_guild_join() - tasks ran when the bot joins a guild.
 """
-@bot.event
+@bot.listen()
 async def on_guild_join() -> None:
     # update bot presence
     await util.update_presence(bot)
