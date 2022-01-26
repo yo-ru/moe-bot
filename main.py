@@ -123,6 +123,7 @@ async def on_message(message) -> None:
     # ignore bot
     if message.author == bot.user:
         return
+    # ignore everyone mentions
     if message.mention_everyone:
         return
 

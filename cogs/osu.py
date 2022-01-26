@@ -1,3 +1,4 @@
+from multiprocessing.sharedctypes import Value
 import nextcord
 from ossapi.enums import GameMode
 from nextcord.activity import Game
@@ -148,11 +149,26 @@ class Osu(Cog):
             if mode:
                 if mode not in self.VALID_MODES:
                     return await ctx.send("Invalid mode selection!\nValid modes are: **osu!**, **osu!taiko**, **osu!catch**, **osu!mania**.", ephemeral=True)
+                
+                # TODO: this is so bad.
+                while True:
+                    try:
+                        user = self.bot.osu.user(member.get("osuid"), self.TO_API_CONV.get(mode))
+                        break
+                    except:
+                        ...
 
-                user = self.bot.osu.user(member.get("osuid"), self.TO_API_CONV.get(mode))
+                    
             # unspecified mode; use favoritemode
             else:
-                user = self.bot.osu.user(member.get("osuid"), member.get("favoritemode"))
+                # TODO: this is so bad.
+                while True:
+                    try:
+                        user = self.bot.osu.user(member.get("osuid"), member.get("favoritemode"))
+                        break
+                    except:
+                        ...
+                
                 mode = self.FROM_API_CONV.get(member.get("favoritemode"))
 
         # profile used; no mode
