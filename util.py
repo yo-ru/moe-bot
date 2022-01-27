@@ -74,7 +74,7 @@ async def auth_osu_api(bot) -> None:
 """
 async def get_active_guilds(bot) -> None:
     log("--- Start Active Guilds ---", Ansi.MAGENTA)
-    log("# | Guild Name | Guild ID | Member Count | Guild Invite")
+    log("# | Guild Name | Guild ID | Member Count | Guild Invite", Ansi.LYELLOW)
     for i, g in enumerate(bot.guilds):
         if not (inv := await bot.db.fetch("SELECT inv FROM guildinvites WHERE guildid = %s", g.id)):
             try:
