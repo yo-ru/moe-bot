@@ -116,7 +116,7 @@ async def on_ready() -> None:
     log("--- Start Active Guilds ---", Ansi.MAGENTA)
     log("# | Guild Name | Guild ID | Member Count | Guild Invite")
     for i, g in enumerate(bot.guilds):
-        log(f"{i+1}. {g.name} | {g.id} | {g.member_count} | {await g.invites()[0].code}", Ansi.LYELLOW)
+        log(f"{i+1}. {g.name} | {g.id} | {g.member_count} | {(await g.invites())[0].code}", Ansi.LYELLOW)
     log("--- End Active Guilds ---\n", Ansi.MAGENTA)
 
 
