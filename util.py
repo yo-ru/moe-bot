@@ -87,7 +87,6 @@ async def get_active_guilds(bot) -> None:
             except AttributeError:
                 # TODO: wtf am I doing.
                 log(f"Couldn't create invite for {g.name}.", Ansi.LRED)
-                inv[0] = None
                 
-        log(f"{i+1}. {g.name} | {g.id} | {g.member_count} | {inv[0]}", Ansi.LYELLOW)
+        log(f"{i+1}. {g.name} | {g.id} | {g.member_count} | {inv[0] if inv else None}", Ansi.LYELLOW)
     log("--- End Active Guilds ---\n", Ansi.MAGENTA)
