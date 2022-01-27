@@ -117,13 +117,16 @@ async def on_ready() -> None:
     log("# | Guild Name | Guild ID | Member Count | Guild Invite")
     for i, g in enumerate(bot.guilds):
         if not (inv := await bot.db.fetch("SELECT inv FROM guildinvites WHERE guildid = %s", g.id)):
-            await bot.db.execute(
-                "INSERT INTO guildinvites "
-                "(guildid, inv) "
-                "VALUES (%s, %s) ",
-                [g.id, (await g.system_channel.create_invite()).code]
-            )
-        log(f"{i+1}. {g.name} | {g.id} | {g.member_count} | {inv}", Ansi.LYELLOW)
+            try:
+                await bot.db.execute(
+                    "INSERT INTO guildinvites "
+                    "(guildid, inv) "
+                    "VALUES (%s, %s) ",
+                    [g.id, (await g.system_channel.create_invite()).code]
+                )
+            except AttributeError:
+                log(f"Couldn't create invite for {g.name}.", Ansi.LRED)
+        log(f"{i+1}. {g.name} | {g.id} | {g.member_count} | {inv[0]}", Ansi.LYELLOW)
     log("--- End Active Guilds ---\n", Ansi.MAGENTA)
 
 
