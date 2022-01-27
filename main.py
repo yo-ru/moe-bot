@@ -110,14 +110,13 @@ async def on_ready() -> None:
 
     # Moé ready
     log(f"Moé has been logged in as {bot.user}.", Ansi.LBLUE)
-    if config.debug:
-        log(f"Running version {bot.version}!", Ansi.LBLUE)
+    log(f"Running version {bot.version}!\n", Ansi.LBLUE)
 
     # Guilds
-    _guild_str = ""
+    log("--- Start Active Guilds ---", Ansi.MAGENTA)
     for i, g in enumerate(bot.guilds):
-        _guild_str += f"{i+1}. {g.name} [{g.id}]\n"
-    log(_guild_str, Ansi.LYELLOW)
+        log(f"{i+1}. {g.name} [{g.id}]", Ansi.LYELLOW)
+    log("--- End Active Guilds ---\n", Ansi.MAGENTA)
 
 
 
