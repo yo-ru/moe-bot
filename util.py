@@ -34,8 +34,7 @@ async def mysql_connect(bot, cred: dict) -> None:
     try:
         bot.db = AsyncSQLPool()
         await bot.db.connect(cred)
-        if config.debug:
-            log("Connected to MySQL!", Ansi.LGREEN)
+        log("Connected to MySQL!", Ansi.LGREEN)
     except:
         log("Failed to connect to MySQL!", Ansi.LRED)
         exit(1) # NOTE: Moé loses a lot of functionality without mysql; stop execution
