@@ -66,3 +66,28 @@ async def auth_osu_api(bot) -> None:
     except:
         bot.unload_extension("cogs.osu")
         log("Failed to authorize with the osu!api! (Unloaded cogs.osu!)", Ansi.LRED)
+
+
+
+"""
+# get_active_guilds() - return active guilds the bot is in.
+"""
+async def get_active_guilds(bot) -> None:
+    log("--- Start Active Guilds ---", Ansi.MAGENTA)
+    log("# | Guild Name | Guild ID | Member Count | Guild Invite")
+    for i, g in enumerate(bot.guilds):
+        if not (inv := await bot.db.fetch("SELECT inv FROM guildinvites WHERE guildid = %s", g.id)):
+            try:
+                await bot.db.execute(
+                    "INSERT INTO guildinvites "
+                    "(guildid, inv) "
+                    "VALUES (%s, %s) ",
+                    [g.id, (await g.system_channel.create_invite()).code]
+                )
+            except AttributeError:
+                # TODO: wtf am I doing.
+                log(f"Couldn't create invite for {g.name}.", Ansi.LRED)
+                inv[0] = None
+                
+        log(f"{i+1}. {g.name} | {g.id} | {g.member_count} | {inv[0]}", Ansi.LYELLOW)
+    log("--- End Active Guilds ---\n", Ansi.MAGENTA)

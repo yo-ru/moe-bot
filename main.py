@@ -25,7 +25,7 @@ NOTE:
     - minor: command changes/new features
     - patch: typo fixes/bug fixes
 """
-bot.version = Version(2, 3, 4)
+bot.version = Version(2, 4, 4)
 
 
 
@@ -89,6 +89,28 @@ async def on_guild_remove(guild) -> None:
 
 
 """
+on_message() - tasks ran when a message is sent.
+"""
+@bot.event
+async def on_message(message) -> None:
+    # ignore bot
+    if message.author == bot.user:
+        return
+    # ignore everyone mentions
+    if message.mention_everyone:
+        return
+
+    # basic message logging to console
+    if not "<@!" in message.content:
+        log(f"[{message.guild.name} (#{message.channel.name})] {str(message.author)}: {message.content}", Ansi.LYELLOW)
+
+    # basic ping response
+    if bot.user.mentioned_in(message):
+        await message.channel.send(f"Hi, **{message.author.name}**, my name is **Moé**!\nMy command prefix is **/**. Try typing it in chat to view my full commandset!")
+
+
+
+"""
 on_ready() - tasks ran as soon as Moé is ready.
 """
 @bot.listen()
@@ -113,43 +135,7 @@ async def on_ready() -> None:
     log(f"Running version {bot.version}!\n", Ansi.LBLUE)
 
     # Guilds
-    log("--- Start Active Guilds ---", Ansi.MAGENTA)
-    log("# | Guild Name | Guild ID | Member Count | Guild Invite")
-    for i, g in enumerate(bot.guilds):
-        if not (inv := await bot.db.fetch("SELECT inv FROM guildinvites WHERE guildid = %s", g.id)):
-            try:
-                await bot.db.execute(
-                    "INSERT INTO guildinvites "
-                    "(guildid, inv) "
-                    "VALUES (%s, %s) ",
-                    [g.id, (await g.system_channel.create_invite()).code]
-                )
-            except AttributeError:
-                log(f"Couldn't create invite for {g.name}.", Ansi.LRED)
-        log(f"{i+1}. {g.name} | {g.id} | {g.member_count} | {inv[0]}", Ansi.LYELLOW)
-    log("--- End Active Guilds ---\n", Ansi.MAGENTA)
-
-
-
-"""
-on_message() - tasks ran when a message is sent.
-"""
-@bot.event
-async def on_message(message) -> None:
-    # ignore bot
-    if message.author == bot.user:
-        return
-    # ignore everyone mentions
-    if message.mention_everyone:
-        return
-
-    # basic message logging to console
-    if not "<@!" in message.content:
-        log(f"[{message.guild.name} (#{message.channel.name})] {str(message.author)}: {message.content}", Ansi.LYELLOW)
-
-    # basic ping response
-    if bot.user.mentioned_in(message):
-        await message.channel.send(f"Hi, **{message.author.name}**, my name is **Moé**!\nMy command prefix is **/**. Try typing it in chat to view my full commandset!")
+    await util.get_active_guilds(bot)
 
 
 
