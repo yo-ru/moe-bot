@@ -117,7 +117,7 @@ async def on_ready() -> None:
     log("# | Guild Name | Guild ID | Member Count | Guild Invite")
     for i, g in enumerate(bot.guilds):
         if not (inv := await bot.db.fetch("SELECT inv FROM guildinvites WHERE guildid = %s", g.id)):
-            bot.db.execute(
+            await bot.db.execute(
                 "INSERT INTO guildinvites "
                 "(guildid, inv) "
                 "VALUES (%s, %s) ",
