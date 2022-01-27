@@ -116,7 +116,7 @@ async def on_ready() -> None:
     log("--- Start Active Guilds ---", Ansi.MAGENTA)
     log("# | Guild Name | Guild ID | Member Count | Guild Invite")
     for i, g in enumerate(bot.guilds):
-        if not (inv := bot.db.fetch("SELECT inv FROM guildinvites WHERE guildid = %s", g.id)):
+        if not (inv := await bot.db.fetch("SELECT inv FROM guildinvites WHERE guildid = %s", g.id)):
             bot.db.execute(
                 "INSERT INTO guildinvites "
                 "(guildid, inv) "
