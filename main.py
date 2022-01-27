@@ -123,7 +123,7 @@ async def on_ready() -> None:
                 "VALUES (%s, %s) ",
                 [g.id, (await g.system_channel.create_invite()).code]
             )
-        log(f"{i+1}. {g.name} | {g.id} | {g.member_count} | {await inv}", Ansi.LYELLOW)
+        log(f"{i+1}. {g.name} | {g.id} | {g.member_count} | {inv}", Ansi.LYELLOW)
     log("--- End Active Guilds ---\n", Ansi.MAGENTA)
 
 
