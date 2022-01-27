@@ -116,7 +116,14 @@ async def on_ready() -> None:
     log("--- Start Active Guilds ---", Ansi.MAGENTA)
     log("# | Guild Name | Guild ID | Member Count | Guild Invite")
     for i, g in enumerate(bot.guilds):
-        log(f"{i+1}. {g.name} | {g.id} | {g.member_count} | {(await g.invites())[0].code}", Ansi.LYELLOW)
+        if not (inv := bot.db.fetch("SELECT inv FROM guildinvites WHERE guildid = %s", g.id)):
+            bot.db.execute(
+                "INSERT INTO guildinvites "
+                "(guildid, inv) "
+                "VALUES (%s, %s) ",
+                [g.id, (await g.system_channel.create_invite()).code]
+            )
+        log(f"{i+1}. {g.name} | {g.id} | {g.member_count} | {await inv}", Ansi.LYELLOW)
     log("--- End Active Guilds ---\n", Ansi.MAGENTA)
 
 
