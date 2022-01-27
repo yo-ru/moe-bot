@@ -118,24 +118,20 @@ async def on_ready() -> None:
     log("--- Start Tasks ---", Ansi.MAGENTA)
     # connect to mysql
     await util.mysql_connect(bot, config.mysql)
-
     # create the client session
     await util.create_client_session(bot)
-
     # authorize with the osu!api
     await util.auth_osu_api(bot)
-
     # update presence
     await util.update_presence(bot)
-
     log("--- End Tasks ---\n", Ansi.MAGENTA)
+
+    # Active guilds
+    await util.get_active_guilds(bot)
 
     # Moé ready
     log(f"Moé has been logged in as {bot.user}.", Ansi.LBLUE)
     log(f"Running version {bot.version}!\n", Ansi.LBLUE)
-
-    # Guilds
-    await util.get_active_guilds(bot)
 
 
 
