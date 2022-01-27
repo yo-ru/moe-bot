@@ -85,7 +85,7 @@ async def get_active_guilds(bot) -> None:
                     [g.id, (await g.system_channel.create_invite()).code]
                 )
             except:
-                log(f"Couldn't create invite for {g.name}.", Ansi.LRED)
+                ...
                 
         log(f"{i+1}. {g.name} | {g.id} | {g.member_count} | {inv['inv'] if inv else None}", Ansi.LYELLOW)
     log("--- End Active Guilds ---\n", Ansi.MAGENTA)
