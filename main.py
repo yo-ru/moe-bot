@@ -113,6 +113,12 @@ async def on_ready() -> None:
     if config.debug:
         log(f"Running version {bot.version}!", Ansi.LBLUE)
 
+    # Guilds
+    _guild_str = ""
+    for i, g in enumerate(bot.guilds):
+        _guild_str += f"{i+1}. {g.name} [{g.id}]\n"
+    log(_guild_str, Ansi.LYELLOW)
+
 
 
 """
