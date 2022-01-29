@@ -79,7 +79,7 @@ class Osu(Cog):
         except ValueError:
                 return await ctx.send("I couldn't find that osu! profile!\nMake sure you spelled their **username** or entered their **ID** correctly!", ephemeral=True)
         except:
-            return await ctx.send("An unknown error occured! Please report it to the developer!", ephemeral=True)
+            return await ctx.send("Failed to contact the osu!api. Please try again.", ephemeral=True)
         
         # check if someone has already linked that osu! profile
         if await self.bot.db.fetch("SELECT 1 FROM osulink WHERE osuid = %s", user.id):
@@ -150,24 +150,20 @@ class Osu(Cog):
                 if mode not in self.VALID_MODES:
                     return await ctx.send("Invalid mode selection!\nValid modes are: **osu!**, **osu!taiko**, **osu!catch**, **osu!mania**.", ephemeral=True)
                 
-                # TODO: this is so bad.
-                while True:
-                    try:
-                        user = self.bot.osu.user(member.get("osuid"), self.TO_API_CONV.get(mode))
-                        break
-                    except:
-                        ...
+                # TODO: handle this better
+                try:
+                    user = self.bot.osu.user(member.get("osuid"), self.TO_API_CONV.get(mode))
+                except:
+                    return await ctx.send("Failed to contact the osu!api. Please try again.", ephemeral=True)
 
                     
             # unspecified mode; use favoritemode
             else:
-                # TODO: this is so bad.
-                while True:
-                    try:
-                        user = self.bot.osu.user(member.get("osuid"), member.get("favoritemode"))
-                        break
-                    except:
-                        ...
+                # TODO: handle this better
+                try:
+                    user = self.bot.osu.user(member.get("osuid"), member.get("favoritemode"))
+                except:
+                    return await ctx.send("Failed to contact the osu!api. Please try again.", ephemeral=True)
                 
                 mode = self.FROM_API_CONV.get(member.get("favoritemode"))
 
