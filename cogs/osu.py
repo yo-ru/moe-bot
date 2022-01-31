@@ -69,6 +69,9 @@ class Osu(Cog):
             
         )
         ):
+        # defer
+        await ctx.response.defer(ephemeral=True)
+
         # osu! profile already linked
         if await self.bot.db.fetch("SELECT 1 FROM osulink WHERE discordid = %s", ctx.user.id):
             return await ctx.send("You already have an osu! profile linked!", ephemeral=True)
@@ -107,6 +110,9 @@ class Osu(Cog):
         self, 
         ctx: Interaction
         ):
+        # defer
+        await ctx.response.defer(ephemeral=True)
+
         if await self.bot.db.fetch("SELECT 1 FROM osulink WHERE discordid = %s", ctx.user.id):
             await self.bot.db.execute("DELETE FROM osulink WHERE discordid = %s", ctx.user.id)
             return await ctx.send("Successfully unlinked your osu! profile from discord!", ephemeral=True)
@@ -138,6 +144,9 @@ class Osu(Cog):
             default=None
         )
         ):
+        # defer
+        await ctx.response.defer(ephemeral=True)
+
         # user has linked account
         if not profile:
             # check if member has an osu! profile linked
