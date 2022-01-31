@@ -145,7 +145,7 @@ class Osu(Cog):
         )
         ):
         # defer
-        await ctx.response.defer(ephemeral=True)
+        await ctx.response.defer(ephemeral=False)
 
         # user has linked account
         if not profile:
