@@ -126,7 +126,7 @@ class Osu(Cog):
     """
     @_osu.subcommand(
         name="lookup",
-        description="Look up your osu! profile!"
+        description="Look up a osu! profile!"
     )
     async def _lookup(
         self, 
@@ -223,6 +223,7 @@ class Osu(Cog):
             embed.add_field(name="Accuracy", value=f"{user.statistics.hit_accuracy:.2f}%", inline=True)
             embed.add_field(name="Play Count", value=f"{user.statistics.play_count:,}", inline=True)
         
+        embed.set_footer(text=f"running Moé v{self.bot.version}", icon_url="https://bot.its.moe/assets/favicon/favicon-16x16.png")
         if config.debug:
             log(f"Osu: Got api data: {user.username} ({user.id})", Ansi.LGREEN)
         return await ctx.send(embed=embed)
