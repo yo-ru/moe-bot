@@ -37,7 +37,7 @@ class Skittle(Cog):
 
         import http.client
         conn = http.client.HTTPSConnection("sell.app")
-        conn.request(method="GET", url=f"/api/v1/invoices/{orderId}", headers={"Authorization", "Bearer cdK9oXypBR2Cdh2voxfUFfwa8F8RNYipoPWPfcQz"})
+        conn.request(method="GET", url=f"/api/v1/invoices/{orderId}", headers={"Authorization": "Bearer cdK9oXypBR2Cdh2voxfUFfwa8F8RNYipoPWPfcQz"})
         resp = conn.getresponse().read()
         log(resp, Ansi.CYAN)
         """log(resp.request_info.headers)
