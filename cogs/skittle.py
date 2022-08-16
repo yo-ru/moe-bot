@@ -37,10 +37,9 @@ class Skittle(Cog):
 
         import http.client
         conn = http.client.HTTPSConnection("sell.app")
-        conn.request("GET", f"/api/v1/invoices/{orderId}")
-        conn.putheader("Authorization", "Bearer cdK9oXypBR2Cdh2voxfUFfwa8F8RNYipoPWPfcQz")
+        conn.request(method="GET", url=f"/api/v1/invoices/{orderId}", headers={"Authorization", "Bearer cdK9oXypBR2Cdh2voxfUFfwa8F8RNYipoPWPfcQz"})
         resp = conn.getresponse().read()
-        log(resp)
+        log(resp, Ansi.CYAN)
         """log(resp.request_info.headers)
         if resp.status == 404:
             return await ctx.send("Invalid Order ID!\nPlease double check and try again.", ephemeral=True)
