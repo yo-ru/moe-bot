@@ -31,7 +31,7 @@ class Skittle(Cog):
         )
     ):
         role = nextcord.utils.get(ctx.guild.roles, name="Customer")
-        if ctx.message.author.get_role(role.id):
+        if ctx.user.get_role(role.id):
             return await ctx.send("You already have the customer role!", ephemeral=True)
 
         async with self.bot.request.request(
@@ -42,7 +42,7 @@ class Skittle(Cog):
             if resp.status == 404:
                 return await ctx.send("Invalid Order ID!\nPlease double check and try again.", ephemeral=True)
             elif resp.status == 200:
-                await ctx.message.author.add_roles(role, f"Customer role applied automiatcally via Order ID: {orderId}")
+                await ctx.user.add_roles(role, f"Customer role applied automiatcally via Order ID: {orderId}")
                 return await ctx.send("🎉 Thank you for your support! Your customer role has been applied!\nMake sure to leave a `+rep` in <#1008042020549427261>!", ephemeral=True)
             else:
                 return await ctx.send("An unknown error occured! Contact my developer!", ephemeral=True)
