@@ -1,3 +1,4 @@
+import aiohttp
 import nextcord
 from datetime import datetime
 from nextcord.activity import Game
@@ -34,11 +35,9 @@ class Skittle(Cog):
         if ctx.user.get_role(role.id):
             return await ctx.send("You already have the customer role!", ephemeral=True)
 
-        async with self.bot.request.request(
-            method="GET",
-            url=f"https://sell.app/api/v1/invoices/{orderId}",
-            headers={"Authorization": f"Bearer {config.sellapp_token}", "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36"}
-        ) as resp:
+        session = aiohttp.ClientSession(headers={"Authorization": f"Bearer {config.sellapp_token}"})
+        url = f"https://sell.app/api/v1/invoices/{orderId}"
+        async with session.request("GET", url) as resp:
             log(orderId)
             log(resp.request_info.headers)
             if resp.status == 404:
