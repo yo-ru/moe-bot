@@ -22,7 +22,7 @@ class Util(Cog):
     async def _util(
         self, 
         ctx: Interaction
-        ):
+    ):
         ...
 
     
@@ -37,7 +37,7 @@ class Util(Cog):
     async def _ping(
         self, 
         ctx: Interaction
-        ):
+    ):
         return await ctx.send(f"Pong **({self.bot.latency*1000:.2f}ms)**", ephemeral=True)
 
     
@@ -52,7 +52,7 @@ class Util(Cog):
     async def _uptime(
         self, 
         ctx: Interaction
-        ):
+    ):
         delta = datetime.utcnow() - self.bot.start_time
         hours, rem = divmod(int(delta.total_seconds()), 3600)
         minutes, seconds = divmod(rem, 60)
@@ -71,7 +71,7 @@ class Util(Cog):
     async def _version(
         self, 
         ctx: Interaction
-        ):
+    ):
         return await ctx.send(f"I'm currently running version **{self.bot.version}**!\nCheck my GitHub page to see if my firmware is out of date!")
 
 def setup(bot) -> None:

@@ -65,10 +65,9 @@ class Osu(Cog):
         profile: str = SlashOption(
             name="profile",
             description="The osu! profile you are linking. This can be your username or ID.",
-            required=True,
-            
+            required=True,  
         )
-        ):
+    ):
         # defer
         await ctx.response.defer(ephemeral=True)
 
@@ -109,7 +108,7 @@ class Osu(Cog):
     async def _unlink(
         self, 
         ctx: Interaction
-        ):
+    ):
         # defer
         await ctx.response.defer(ephemeral=True)
 
@@ -143,7 +142,7 @@ class Osu(Cog):
             required=False,
             default=None
         )
-        ):
+    ):
         # defer
         await ctx.response.defer(ephemeral=False)
 

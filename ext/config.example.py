@@ -9,6 +9,9 @@ mysql = {
 # discord application token.
 token = "12345678912345678912345678912345678912345678912345678912345"
 
+# sellapp application token.
+sellapp_token = ""
+
 # osu api credentials.
 osu = {
     "id": "9558",
