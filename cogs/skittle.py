@@ -37,7 +37,7 @@ class Skittle(Cog):
         async with self.bot.request.request(
             method="GET",
             url=f"https://sell.app/api/v1/invoices/{orderId}",
-            headers={"Authorization": f"Bearer {config.sellapp_token}"}
+            headers={"Authorization": f"Bearer {config.sellapp_token}", "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/75.0.3770.100 Safari/537.36"}
         ) as resp:
             log(orderId)
             log(resp.request_info.headers)
