@@ -35,7 +35,7 @@ class Skittle(Cog):
         if ctx.user.get_role(role.id):
             return await ctx.send("You already have the customer role!", ephemeral=True)
 
-        session = aiohttp.ClientSession(headers={"Authorization": f"Bearer {config.sellapp_token}"})
+        session = aiohttp.ClientSession(headers={"Authorization": f"Bearer {config.sellapp_token}"}, skip_auto_headers=True)
         url = f"https://sell.app/api/v1/invoices/{orderId}"
         async with session.request("GET", url) as resp:
             log(orderId)
