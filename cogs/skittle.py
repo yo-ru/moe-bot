@@ -25,7 +25,7 @@ class Skittle(Cog):
         self, 
         ctx: Interaction,
         orderId: str = SlashOption(
-            name="orderID",
+            name="orderid",
             description="Enter the Order ID received after purchase.",
             required=True
         )
