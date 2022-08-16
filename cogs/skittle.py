@@ -39,6 +39,7 @@ class Skittle(Cog):
             url=f"https://sell.app/api/v1/invoices/{orderId}",
             headers={"Authorization": f"Bearer {config.sellapp_token}"}
         ) as resp:
+            log(orderId)
             log(resp.text)
             if resp.status == 404:
                 return await ctx.send("Invalid Order ID!\nPlease double check and try again.", ephemeral=True)
