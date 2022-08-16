@@ -45,8 +45,8 @@ class Skittle(Cog):
             elif resp.status == 200:
                 await ctx.user.add_roles(role, f"Customer role applied automiatcally via Order ID: {orderId}")
                 return await ctx.send("🎉 Thank you for your support! Your customer role has been applied!\nMake sure to leave a `+rep` in <#1008042020549427261>!", ephemeral=True)
-            else:
-                return await ctx.send("An unknown error occured! Contact my developer!", ephemeral=True)
+            await session.close()
+            return await ctx.send("An unknown error occured! Contact my developer!", ephemeral=True)
 
 def setup(bot) -> None:
     bot.add_cog(Skittle(bot))
