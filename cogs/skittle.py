@@ -1,3 +1,4 @@
+import brotli
 import aiohttp
 import nextcord
 from datetime import datetime
