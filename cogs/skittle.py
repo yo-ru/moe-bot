@@ -1,10 +1,8 @@
 import aiohttp
 import nextcord
-from datetime import datetime
-from nextcord.activity import Game
 from cmyui.logging import Ansi, log
 from nextcord.ext.commands import Cog
-from nextcord import Embed, Interaction, SlashOption
+from nextcord import Interaction, SlashOption
 
 import config
 
@@ -35,19 +33,17 @@ class Skittle(Cog):
         if ctx.user.get_role(role.id):
             return await ctx.send("You already have the customer role!", ephemeral=True)
 
-        import http.client
-        conn = http.client.HTTPSConnection("sell.app")
-        conn.request(method="GET", url=f"/api/v1/invoices/{orderId}", headers={"Authorization": "Bearer cdK9oXypBR2Cdh2voxfUFfwa8F8RNYipoPWPfcQz"})
-        resp = conn.getresponse().read()
-        log(resp, Ansi.CYAN)
-        """log(resp.request_info.headers)
-        if resp.status == 404:
-            return await ctx.send("Invalid Order ID!\nPlease double check and try again.", ephemeral=True)
-        elif resp.status == 200:
-            await ctx.user.add_roles(role, f"Customer role applied automiatcally via Order ID: {orderId}")
-            return await ctx.send("🎉 Thank you for your support! Your customer role has been applied!\nMake sure to leave a `+rep` in <#1008042020549427261>!", ephemeral=True)
-        await session.close()
-        return await ctx.send("An unknown error occured! Contact my developer!", ephemeral=True)"""
+        session = aiohttp.ClientSession(headers={"Authorization": f"Bearer {config.sellapp_token}"})
+        async with session.get(f"https://sell.app/api/v1/invoices/{orderId}", allow_redirects=False) as resp:
+            log(orderId)
+            log(resp.request_info.headers)
+            if resp.status == 404:
+                return await ctx.send("Invalid Order ID!\nPlease double check and try again.", ephemeral=True)
+            elif resp.status == 200:
+                await ctx.user.add_roles(role, f"Customer role applied automiatcally via Order ID: {orderId}")
+                return await ctx.send("🎉 Thank you for your support! Your customer role has been applied!\nMake sure to leave a `+rep` in <#1008042020549427261>!", ephemeral=True)
+            await session.close()
+            return await ctx.send("An unknown error occured! Contact my developer!", ephemeral=True)
 
 def setup(bot) -> None:
     bot.add_cog(Skittle(bot))
