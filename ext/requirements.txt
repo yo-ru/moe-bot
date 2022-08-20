@@ -6,4 +6,4 @@ nextcord[voice]==2.0.0a6
 pynacl==1.4.0
 ossapi==2.2.2
 tzdata==2021.5
-databases
+databases==0.5.5
