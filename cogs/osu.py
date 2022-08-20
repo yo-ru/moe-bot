@@ -115,7 +115,7 @@ class Osu(Cog):
 
         async with self.bot.db.connection() as db:
             if await db.fetch_one("SELECT 1 FROM osulink WHERE discordid = :id", {"id": ctx.user.id}):
-                await self.bot.db.execute("DELETE FROM osulink WHERE discordid = %s", ctx.user.id)
+                await db.execute("DELETE FROM osulink WHERE discordid = :id", {"id": ctx.user.id})
                 return await ctx.send("Successfully unlinked your osu! profile from discord!", ephemeral=True)
             else:
                 return await ctx.send("You don't have an osu! profile linked to your discord!", ephemeral=True)
