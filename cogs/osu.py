@@ -71,9 +71,9 @@ class Osu(Cog):
         # defer
         await ctx.response.defer(ephemeral=True)
 
-        # osu! profile already linked
-        if await self.bot.db.fetch("SELECT 1 FROM osulink WHERE discordid = %s", ctx.user.id):
-            return await ctx.send("You already have an osu! profile linked!", ephemeral=True)
+        async with self.bot.db.connection() as db:
+            if await db.fetch_one("SELECT 1 FROM osulink WHERE discordid = :id", {"id": ctx.user.id}):
+                return await ctx.send("You already have an osu! profile linked!", ephemeral=True)
 
         # check if osu! profile exists
         try:
@@ -84,17 +84,18 @@ class Osu(Cog):
             return await ctx.send("Failed to contact the osu!api. Please try again.", ephemeral=True)
         
         # check if someone has already linked that osu! profile
-        if await self.bot.db.fetch("SELECT 1 FROM osulink WHERE osuid = %s", user.id):
-            return await ctx.send(f"Someone has already linked the osu! profile, **{user.username}**, to their account!", ephemeral=True)
+        async with self.bot.db.connection() as db:
+            if await db.fetch_one("SELECT 1 FROM osulink WHERE osuid = :id", {"id": user.id}):
+                return await ctx.send(f"Someone has already linked the osu! profile, **{user.username}**, to their account!", ephemeral=True)
         # store osulink
-        else:
-            await self.bot.db.execute(
-                "INSERT INTO osulink "
-                "(discordid, osuid, favoritemode) "
-                "VALUES (%s, %s, %s)",
-                [ctx.user.id, user.id, user.playmode]
-            )
-            return await ctx.send(f"Successfully linked the osu! profile, **{user.username}**, to discord!", ephemeral=True)  
+            else:
+                await db.execute(
+                    "INSERT INTO osulink "
+                    "(discordid, osuid, favoritemode) "
+                    "VALUES (:did, :oid, :mode)",
+                    {"did": ctx.user.id, "oid": user.id, "mode": user.playmode}
+                )
+                return await ctx.send(f"Successfully linked the osu! profile, **{user.username}**, to discord!", ephemeral=True)  
 
 
 
@@ -112,11 +113,12 @@ class Osu(Cog):
         # defer
         await ctx.response.defer(ephemeral=True)
 
-        if await self.bot.db.fetch("SELECT 1 FROM osulink WHERE discordid = %s", ctx.user.id):
-            await self.bot.db.execute("DELETE FROM osulink WHERE discordid = %s", ctx.user.id)
-            return await ctx.send("Successfully unlinked your osu! profile from discord!", ephemeral=True)
-        else:
-            return await ctx.send("You don't have an osu! profile linked to your discord!", ephemeral=True)
+        async with self.bot.db.connection() as db:
+            if await db.fetch_one("SELECT 1 FROM osulink WHERE discordid = :id", {"id": ctx.user.id}):
+                await self.bot.db.execute("DELETE FROM osulink WHERE discordid = %s", ctx.user.id)
+                return await ctx.send("Successfully unlinked your osu! profile from discord!", ephemeral=True)
+            else:
+                return await ctx.send("You don't have an osu! profile linked to your discord!", ephemeral=True)
 
 
 
@@ -149,7 +151,8 @@ class Osu(Cog):
         # user has linked account
         if not profile:
             # check if member has an osu! profile linked
-            member = await self.bot.db.fetch("SELECT * FROM osulink WHERE discordid = %s", ctx.user.id)
+            async with self.bot.db.connection() as db:
+                member = await db.fetch("SELECT * FROM osulink WHERE discordid = :id", {"id": ctx.user.id})
             if not member:
                 return await ctx.send("You don't have a osu! profile linked!\nLink one with **/osu link** or specifiy a username when using **/osu lookup**!", ephemeral=True)
 
