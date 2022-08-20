@@ -82,7 +82,7 @@ async def get_active_guilds(bot) -> None:
     log("# | Guild Name | Guild ID | Member Count | Guild Invite", Ansi.LYELLOW)
     for i, g in enumerate(bot.guilds):
         async with bot.db.connection() as db:
-            if not (inv := db.fetch_one("SELECT inv FROM guildinvites WHERE guildid = :id", {"id": g.id})):
+            if not (inv := await db.fetch_one("SELECT inv FROM guildinvites WHERE guildid = :id", {"id": g.id})):
                 try:
                     await bot.db.execute(
                         "INSERT INTO guildinvites "
