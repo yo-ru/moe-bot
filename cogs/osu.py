@@ -153,7 +153,6 @@ class Osu(Cog):
             # check if member has an osu! profile linked
             async with self.bot.db.connection() as db:
                 member = await db.fetch_one("SELECT * FROM osulink WHERE discordid = :id", {"id": ctx.user.id})
-                log(f"{[i for i in member]}", Ansi.LRED)
             if not member:
                 return await ctx.send("You don't have a osu! profile linked!\nLink one with **/osu link** or specifiy a username when using **/osu lookup**!", ephemeral=True)
 
@@ -164,7 +163,7 @@ class Osu(Cog):
                 
                 # TODO: handle this better
                 try:
-                    user = self.bot.osu.user(member.get("osuid"), self.TO_API_CONV.get(mode))
+                    user = self.bot.osu.user(member[2], self.TO_API_CONV.get(mode))
                 except:
                     return await ctx.send("Failed to contact the osu!api. Please try again.", ephemeral=True)
 
@@ -173,11 +172,11 @@ class Osu(Cog):
             else:
                 # TODO: handle this better
                 try:
-                    user = self.bot.osu.user(member.get("osuid"), member.get("favoritemode"))
+                    user = self.bot.osu.user(member[2], member[3])
                 except:
                     return await ctx.send("Failed to contact the osu!api. Please try again.", ephemeral=True)
                 
-                mode = self.FROM_API_CONV.get(member.get("favoritemode"))
+                mode = self.FROM_API_CONV.get(member[3])
 
         # profile used; no mode
         elif profile and not mode:
