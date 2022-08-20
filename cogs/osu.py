@@ -153,6 +153,7 @@ class Osu(Cog):
             # check if member has an osu! profile linked
             async with self.bot.db.connection() as db:
                 member = await db.fetch_one("SELECT * FROM osulink WHERE discordid = :id", {"id": ctx.user.id})
+                log(f"{[i for i in member]}", Ansi.LRED)
             if not member:
                 return await ctx.send("You don't have a osu! profile linked!\nLink one with **/osu link** or specifiy a username when using **/osu lookup**!", ephemeral=True)
 
