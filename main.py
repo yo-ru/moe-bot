@@ -25,7 +25,7 @@ NOTE:
     - minor: command changes/new features
     - patch: typo fixes/bug fixes
 """
-bot.version = Version(2, 4, 4)
+bot.version = Version(3, 5, 3)
 
 
 

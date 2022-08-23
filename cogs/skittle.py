@@ -52,7 +52,7 @@ class Skittle(Cog):
 
 
     """
-    order - look  up an order by id.
+    order - look up an order by id.
     NOTE: Exclusively for https://skittle.shop.
     """
     @nextcord.slash_command(
