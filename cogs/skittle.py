@@ -71,6 +71,8 @@ class Skittle(Cog):
             required=True,
         )
     ):
+        product_title: str = ""
+        product_urls: str = ""
         async with self.bot.request.request(
             method="GET",
             url=f"https://sell.app/api/v1/invoices/{orderId}",
@@ -86,8 +88,8 @@ class Skittle(Cog):
                 products = json["data"]["products"]
 
                 for product in products:
-                    product_title = product_title + f"{product['title']} "
-                    product_urls = product_urls + f"[Click Here]({product['url']})"
+                    product_title += f"{product['title']} "
+                    product_urls += f"[Click Here]({product['url']})"
 
                 # TODO: handle order ID.
                 embed=Embed(
