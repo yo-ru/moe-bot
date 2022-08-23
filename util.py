@@ -22,7 +22,7 @@ async def update_presence(bot) -> None:
         await bot.change_presence(
             activity=Activity(
                 type=ActivityType.playing, 
-                name=f"with {f'{len(bot.users):,} users' if len(bot.users) > 1 else 'a user'} in {f'{len(bot.guilds):,} guilds' if len(bot.guilds) > 1 else 'a guild'}."
+                name=f"with {f'{len(bot.users):,} users' if len(bot.users) > 1 else 'a user'} in {f'{len(bot.guilds):,} servers' if len(bot.guilds) > 1 else 'a server'}."
             )
         )
     except:
@@ -75,11 +75,11 @@ async def auth_osu_api(bot) -> None:
 
 
 """
-# get_active_guilds() - return active guilds the bot is in.
+# get_active_servers() - return active servers the bot is in.
 """
-async def get_active_guilds(bot) -> None:
-    log("--- Start Active Guilds ---", Ansi.MAGENTA)
-    log("# | Guild Name | Guild ID | Member Count | Guild Invite", Ansi.LYELLOW)
+async def get_active_servers(bot) -> None:
+    log("--- Start Active Servers ---", Ansi.MAGENTA)
+    log("# | Guild Name | Server ID | Member Count | Server Invite", Ansi.LYELLOW)
     for i, g in enumerate(bot.guilds):
         async with bot.db.connection() as db:
             if not (inv := await db.fetch_one("SELECT inv FROM guildinvites WHERE guildid = :id", {"id": g.id})):

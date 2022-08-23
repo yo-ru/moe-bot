@@ -85,11 +85,9 @@ class Skittle(Cog):
                 status = json["data"]["status"]
                 products = json["data"]["products"]
 
-                product_title: str
-                product_urls: str
                 for product in products:
-                    product_title += f"{product['title']} "
-                    product_urls += f"[Click Here]({product['url']})"
+                    product_title = product_title + f"{product['title']} "
+                    product_urls = product_urls + f"[Click Here]({product['url']})"
 
                 # TODO: handle order ID.
                 embed=Embed(

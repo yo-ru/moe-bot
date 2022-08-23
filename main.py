@@ -127,7 +127,7 @@ async def on_ready() -> None:
     log("--- End Tasks ---\n", Ansi.MAGENTA)
 
     # Active guilds
-    await util.get_active_guilds(bot)
+    await util.get_active_servers(bot)
 
     # Moé ready
     log(f"Moé has been logged in as {bot.user}.", Ansi.LBLUE)
