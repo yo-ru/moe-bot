@@ -1,3 +1,4 @@
+import aiohttp
 import nextcord
 from datetime import datetime
 from nextcord.ext.commands import Cog
@@ -34,11 +35,8 @@ class Skittle(Cog):
         if ctx.user.get_role(role.id):
             return await ctx.send("🎉 You are already a customer!\nIf you haven't already, make sure to leave a `+rep` in <#1008042020549427261>!", ephemeral=True)
 
-        async with self.bot.request.request(
-            method="GET",
-            url=f"https://sell.app/api/v1/invoices/{orderId}",
-            headers={"Authorization": f"Bearer {config.sellapp_token}"}
-        ) as resp:
+        session = aiohttp.ClientSession(headers={"Authorization": f"Bearer {config.sellapp_token}"})
+        async with session.get(f"https://sell.app/api/v1/invoices/{orderId}", allow_redirects=False) as resp:
             if resp.status == 404:
                 return await ctx.send("⛔ Invalid Order ID!\nPlease double check and try again.", ephemeral=True)
             elif resp.status == 200:
@@ -73,11 +71,8 @@ class Skittle(Cog):
     ):
         product_title: str = ""
         product_urls: str = ""
-        async with self.bot.request.request(
-            method="GET",
-            url=f"https://sell.app/api/v1/invoices/{orderId}",
-            headers={"Authorization": f"Bearer {config.sellapp_token}"}
-        ) as resp:
+        session = aiohttp.ClientSession(headers={"Authorization": f"Bearer {config.sellapp_token}"})
+        async with session.get(f"https://sell.app/api/v1/invoices/{orderId}", allow_redirects=False) as resp:
             if resp.status == 404:
                 return await ctx.send("⛔ Invalid Order ID!\nPlease double check and try again.", ephemeral=True)
             elif resp.status == 200:
