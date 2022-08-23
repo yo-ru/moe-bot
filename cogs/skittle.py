@@ -37,6 +37,7 @@ class Skittle(Cog):
 
         session = aiohttp.ClientSession(headers={"Authorization": f"Bearer {config.sellapp_token}"})
         async with session.get(f"https://sell.app/api/v1/invoices/{orderId}", allow_redirects=False) as resp:
+            await session.close()
             if resp.status == 404:
                 return await ctx.send("⛔ Invalid Order ID!\nPlease double check and try again.", ephemeral=True)
             elif resp.status == 200:
@@ -73,6 +74,7 @@ class Skittle(Cog):
         product_urls: str = ""
         session = aiohttp.ClientSession(headers={"Authorization": f"Bearer {config.sellapp_token}"})
         async with session.get(f"https://sell.app/api/v1/invoices/{orderId}", allow_redirects=False) as resp:
+            await session.close()
             if resp.status == 404:
                 return await ctx.send("⛔ Invalid Order ID!\nPlease double check and try again.", ephemeral=True)
             elif resp.status == 200:
@@ -98,7 +100,6 @@ class Skittle(Cog):
                 embed.add_field(name="Order Email", value=customer_info["email"], inline=True)
                 embed.add_field(name="Order IP", value=customer_info["ip"], inline=True)
                 embed.add_field(name="Product URL", value=product_urls, inline=True)
-        
                 embed.set_footer(text=f"running Moé v{self.bot.version}", icon_url="https://bot.its.moe/assets/favicon/favicon-16x16.png")
                 return await ctx.send(embed=embed)
             return await ctx.send("⛔ An unknown error occured!\nContact my developer!", ephemeral=True)
