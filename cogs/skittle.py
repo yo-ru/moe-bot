@@ -91,8 +91,9 @@ class Skittle(Cog):
                     title=product_title, 
                     color=0xff94ed
                 )
+                base_price = payment['gateway']['data']['total']['base']
                 embed.add_field(name="Payment Status", value=status["status"]["status"], inline=True)
-                embed.add_field(name="Payment Amount", value=f"{payment['gateway']['data']['total']['base']} USD", inline=True)
+                embed.add_field(name="Payment Amount", value=f"${base_price[:-2]}.{base_price[-2:]} USD", inline=True)
                 embed.add_field(name="Payment Date", value=datetime.strptime(status["status"]["updatedAt"], "%Y-%m-%dT%H:%M:%S.%fZ").strftime("%H:%M:%S - %B %d, %Y"), inline=True)
                 embed.add_field(name="Order Email", value=customer_info["email"], inline=True)
                 embed.add_field(name="Order IP", value=customer_info["ip"], inline=True)
