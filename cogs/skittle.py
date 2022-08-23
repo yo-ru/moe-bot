@@ -1,5 +1,5 @@
-import time
 import nextcord
+from datetime import datetime
 from nextcord.ext.commands import Cog
 from nextcord.ext import application_checks
 from nextcord import Embed, Interaction, SlashOption
@@ -98,7 +98,7 @@ class Skittle(Cog):
                 )
                 embed.add_field(name="Payment Status", value=status["status"]["status"], inline=True)
                 embed.add_field(name="Payment Amount", value=f"{payment['gateway']['data']['total']['base']} USD", inline=True)
-                embed.add_field(name="Payment Date", value=time(status["status"]["updatedAt"]).strftime("%H:%M:%S - %B %d, %Y"), inline=True)
+                embed.add_field(name="Payment Date", value=datetime.fromtimestamp(status["status"]["updatedAt"]).strftime("%H:%M:%S - %B %d, %Y"), inline=True)
                 embed.add_field(name="Order Email", value=customer_info["email"], inline=True)
                 embed.add_field(name="Order IP", value=customer_info["ip"], inline=True)
                 embed.add_field(name="Product URL", value=product_urls, inline=True)
