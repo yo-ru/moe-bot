@@ -31,6 +31,8 @@ class Skittle(Cog):
             required=True,
         )
     ):
+        await ctx.response.defer()
+
         role = nextcord.utils.get(ctx.guild.roles, name="Customer")
         if ctx.user.get_role(role.id):
             return await ctx.send("🎉 You are already a customer!\nIf you haven't already, make sure to leave a `+rep` in <#1008042020549427261>!", ephemeral=True)
@@ -52,12 +54,12 @@ class Skittle(Cog):
 
 
     """
-    order - look up an order by id.
+    order - lookup an order by id.
     NOTE: Exclusively for https://skittle.shop.
     """
     @nextcord.slash_command(
         name="order",
-        description="Look up an order by ID.",
+        description="Lookup an order by ID.",
         guild_ids=[1008042019828011120]  # Skittle Shop Discord
     )
     @application_checks.has_permissions(administrator=True)
@@ -70,6 +72,8 @@ class Skittle(Cog):
             required=True,
         )
     ):
+        await ctx.response.defer()
+
         product_title: str = ""
         product_urls: str = ""
         session = aiohttp.ClientSession(headers={"Authorization": f"Bearer {config.sellapp_token}"})
@@ -88,7 +92,6 @@ class Skittle(Cog):
                     product_title += f"{product['title']} "
                     product_urls += f"[Click Here]({product['url']})"
 
-                # TODO: handle order ID.
                 embed=Embed(
                     title=product_title, 
                     color=0xff94ed
@@ -103,6 +106,40 @@ class Skittle(Cog):
                 embed.set_footer(text=f"running Moé v{self.bot.version}", icon_url="https://bot.its.moe/assets/favicon/favicon-16x16.png")
                 return await ctx.send(embed=embed)
             return await ctx.send("⛔ An unknown error occured!\nContact my developer!", ephemeral=True)
+
+
+
+    """
+    stock - lookup an current stock amount.
+    NOTE: Exclusively for https://skittle.shop.
+    """
+    @nextcord.slash_command(
+        name="order",
+        description="Look up current stock amount.",
+        guild_ids=[1008042019828011120]  # Skittle Shop Discord
+    )
+    async def _order(
+        self, 
+        ctx: Interaction
+    ):
+        await ctx.response.defer()
+
+        session = aiohttp.ClientSession(headers={"Authorization": f"Bearer {config.sellapp_token}"})
+        async with session.get(f"https://sell.app/api/v1/listings", allow_redirects=False) as resp:
+            await session.close()
+            json = await resp.json()
+            products = json["data"]
+
+            embed=Embed(
+                title="Current Stock", 
+                color=0xff94ed
+            )
+
+            for product in products:
+                embed.add_field(name=product["title"], value=product["deliverable"]["stock"], inline=True)
+
+            embed.set_footer(text=f"running Moé v{self.bot.version}", icon_url="https://bot.its.moe/assets/favicon/favicon-16x16.png")
+            return await ctx.send(embed=embed)
 
 
 
