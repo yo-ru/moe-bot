@@ -114,11 +114,11 @@ class Skittle(Cog):
     NOTE: Exclusively for https://skittle.shop.
     """
     @nextcord.slash_command(
-        name="order",
+        name="stock",
         description="Look up current stock amount.",
         guild_ids=[1008042019828011120]  # Skittle Shop Discord
     )
-    async def _order(
+    async def _stock(
         self, 
         ctx: Interaction
     ):
