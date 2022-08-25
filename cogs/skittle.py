@@ -5,6 +5,8 @@ from nextcord.ext.commands import Cog
 from nextcord.ext import application_checks
 from nextcord import Embed, Interaction, SlashOption
 
+from cmyui import log, Ansi
+
 import config
 
 class Skittle(Cog):
@@ -136,6 +138,7 @@ class Skittle(Cog):
             )
 
             for product in products:
+                log(product["deliverable"]["data"], Ansi.LRED)
                 embed.add_field(name=product["title"], value=product["deliverable"]["data"]["stock"], inline=True)
 
             embed.set_footer(text=f"running Moé v{self.bot.version}", icon_url="https://bot.its.moe/assets/favicon/favicon-16x16.png")
