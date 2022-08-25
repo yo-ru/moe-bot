@@ -33,8 +33,6 @@ class Skittle(Cog):
             required=True,
         )
     ):
-        await ctx.response.defer()
-
         role = nextcord.utils.get(ctx.guild.roles, name="Customer")
         if ctx.user.get_role(role.id):
             return await ctx.send("🎉 You are already a customer!\nIf you haven't already, make sure to leave a `+rep` in <#1008042020549427261>!", ephemeral=True)
@@ -74,8 +72,6 @@ class Skittle(Cog):
             required=True,
         )
     ):
-        await ctx.response.defer()
-
         product_title: str = ""
         product_urls: str = ""
         session = aiohttp.ClientSession(headers={"Authorization": f"Bearer {config.sellapp_token}"})
@@ -124,8 +120,6 @@ class Skittle(Cog):
         self, 
         ctx: Interaction
     ):
-        await ctx.response.defer()
-
         session = aiohttp.ClientSession(headers={"Authorization": f"Bearer {config.sellapp_token}"})
         async with session.get(f"https://sell.app/api/v1/listings", allow_redirects=False) as resp:
             await session.close()
@@ -138,7 +132,7 @@ class Skittle(Cog):
             )
 
             for product in products:
-                embed.add_field(name=product["title"], value=str(product["deliverable"]["data"]["stock"][0]), inline=True)
+                embed.add_field(name=product["title"], value=product["deliverable"]["data"]["stock"][0], inline=True)
 
             embed.set_footer(text=f"running Moé v{self.bot.version}", icon_url="https://bot.its.moe/assets/favicon/favicon-16x16.png")
             return await ctx.send(embed=embed)
