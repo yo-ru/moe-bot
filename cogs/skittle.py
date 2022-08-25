@@ -138,7 +138,7 @@ class Skittle(Cog):
             )
 
             for product in products:
-                embed.add_field(name=product["title"], value=f"{product['deliverable']['data']['stock']}", inline=True)
+                embed.add_field(name=product["title"], value=str(product["deliverable"]["data"]["stock"]), inline=True)
 
             embed.set_footer(text=f"running Moé v{self.bot.version}", icon_url="https://bot.its.moe/assets/favicon/favicon-16x16.png")
             return await ctx.send(embed=embed)
