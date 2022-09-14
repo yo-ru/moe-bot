@@ -6,7 +6,6 @@ import databases
 
 from ossapi import OssapiV2
 from cmyui.logging import Ansi, log
-from cmyui.mysql import AsyncSQLPool
 from nextcord import Activity, ActivityType
 
 import config

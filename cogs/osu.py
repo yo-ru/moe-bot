@@ -1,7 +1,5 @@
-from multiprocessing.sharedctypes import Value
 import nextcord
 from ossapi.enums import GameMode
-from nextcord.activity import Game
 from cmyui.logging import Ansi, log
 from nextcord.ext.commands import Cog
 from nextcord import Embed, Interaction, SlashOption
@@ -187,7 +185,7 @@ class Osu(Cog):
             except ValueError:
                 return await ctx.send("I couldn't find that osu! profile!\nMake sure you spelled their **username** or entered their **ID** correctly!", ephemeral=True)
             except:
-               return await ctx.send("An unknown error occured! Please report it to the developer!", ephemeral=True)
+               return await ctx.send("Failed to contact the osu!api. Please try again.", ephemeral=True)
             
             # convert osu!api mode to fancy mode
             mode = self.FROM_API_CONV.get(favoritemode)
@@ -203,7 +201,7 @@ class Osu(Cog):
             except ValueError:
                 return await ctx.send("I couldn't find that osu! profile!\nMake sure you spelled their **username** or entered their **ID** correctly!", ephemeral=True)
             except:
-                return await ctx.send("An unknown error occured! Please report it to the developer!", ephemeral=True)
+                return await ctx.send("Failed to contact the osu!api. Please try again.", ephemeral=True)
 
         # embed
         embed=Embed(

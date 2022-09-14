@@ -1,11 +1,10 @@
 import aiohttp
+
 import nextcord
 from datetime import datetime
 from nextcord.ext.commands import Cog
 from nextcord.ext import application_checks
 from nextcord import Embed, Interaction, SlashOption
-
-from cmyui import log, Ansi
 
 import config
 

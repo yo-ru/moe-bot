@@ -1,9 +1,8 @@
 import nextcord
 from datetime import datetime
 from nextcord.activity import Game
-from cmyui.logging import Ansi, log
 from nextcord.ext.commands import Cog
-from nextcord import Embed, Interaction, SlashOption
+from nextcord import Interaction
 
 import config
 
