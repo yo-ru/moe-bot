@@ -1,9 +1,8 @@
-cmyui==1.9.3
-orjson==3.6.5
 aiohttp==3.8.1
-asyncio==3.4.3
-nextcord[voice]==2.0.0a6
-pynacl==1.4.0
-ossapi==2.2.2
-tzdata==2021.5
-databases==0.5.5
+cmyui==1.9.3
+config==0.5.1
+databases==0.6.1
+nextcord[voice]==2.2.0a6
+orjson==3.8.0
+ossapi==2.4.0
+pymysql==1.0.2
