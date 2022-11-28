@@ -53,7 +53,7 @@ async def create_client_session(bot) -> None:
     except:
         log("Failed to get the Client Session!", Ansi.LRED)
         bot.db.close() # safely close db connection
-        os._exit # NOTE: Moé loses a lot of functionality without the client session; stop execution
+        os._exit(1) # NOTE: Moé loses a lot of functionality without the client session; stop execution
     finally:
         log("Client Session created!", Ansi.LGREEN)
 
