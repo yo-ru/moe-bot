@@ -1,142 +1,86 @@
+import logging
+from discord.ext import commands
+import discord
+from rich.console import Console
 import os
-from datetime import datetime
+import asyncio
+import databases
 
-from nextcord import Intents
-from cmyui.version import Version
-from cmyui.logging import Ansi, log
-from nextcord.ext.commands import Bot
+from typing import Literal, Optional
 
-import util
-import config
-
-"""
-bot - our discord bot.
-bot.start_time - our initial start time of Moé.
-"""
-bot = Bot(command_prefix=[], intents=Intents.all()) # NOTE: no bot prefix - we use slash commands
-bot.start_time = datetime.utcnow()
+import dotenv
+dotenv.load_dotenv()
 
 
-
-"""
-bot.version - current version of Moé.
-NOTE:
-    - major: breaking changes
-    - minor: command changes/new features
-    - patch: typo fixes/bug fixes
-"""
-bot.version = Version(3, 6, 4)
+logging.basicConfig(level=logging.DEBUG)
+discord.utils.setup_logging()
 
 
-
-"""
-cogs - load all external cogs for Moé.
-"""
-log("--- Start Cogs ---", Ansi.MAGENTA)
-for c in os.listdir("./cogs"):
-    filename, ext = os.path.splitext(c)
-    try:
-        if filename != "__pycache__":
-            bot.load_extension(f"cogs.{filename}")
-            log(f"Loaded cog: cog.{filename}!", Ansi.LGREEN)
-    except Exception as ex:
-        log(f"Failed to load cog: cog.{filename}!", Ansi.LRED)
-        if config.debug:
-            log(f"{ex}", Ansi.LRED)
-        continue
-log("--- End Cogs ---\n", Ansi.MAGENTA)
+class Moe(commands.Bot):
+    async def setup_hook(self):
+        moe.console.print("Moe is ready!", style="bold pink1")
 
 
-
-"""
-on_member_join() - tasks ran as soon as a player joins a guild.
-"""
-@bot.listen()
-async def on_member_join(member) -> None:
-    # update bot presence
-    await util.update_presence(bot)
+moe = Moe(command_prefix="!", intents=discord.Intents.all(), help_command=None)
+moe.console = Console()
+moe.database = databases.Database(os.environ["DB_DSN"])
 
 
+@moe.command()
+@commands.guild_only()
+@commands.is_owner()
+async def sync(ctx: commands.Context, guilds: commands.Greedy[discord.Object], spec: Optional[Literal["~", "*", "^"]] = None) -> None:
+    # Works like:
+    # !sync -> global sync
+    # !sync ~ -> sync current guild
+    # !sync * -> copies all global app commands to current guild and syncs
+    # !sync ^ -> clears all commands from the current guild target and syncs (removes guild commands)
+    # !sync id_1 id_2 -> syncs guilds with id 1 and 2
+    if not guilds:
+        if spec == "~":
+            synced = await ctx.bot.tree.sync(guild=ctx.guild)
+        elif spec == "*":
+            ctx.bot.tree.copy_global_to(guild=ctx.guild)
+            synced = await ctx.bot.tree.sync(guild=ctx.guild)
+        elif spec == "^":
+            ctx.bot.tree.clear_commands(guild=ctx.guild)
+            await ctx.bot.tree.sync(guild=ctx.guild)
+            synced = []
+        else:
+            synced = await ctx.bot.tree.sync()
 
-"""
-on_member_leave() - tasks ran as soon as a player leaves a guild.
-"""
-@bot.listen()
-async def on_member_leave(member) -> None:
-    # update bot presence
-    await util.update_presence(bot)
-
-
-
-"""
-on_guild_join() - tasks ran when the bot joins a guild.
-"""
-@bot.listen()
-async def on_guild_join(guild) -> None:
-    # update bot presence
-    await util.update_presence(bot)
-
-
-
-"""
-on_guild_remove() - tasks ran when the bot is removed from a guild.
-"""
-@bot.listen()
-async def on_guild_remove(guild) -> None:
-    # update bot presence
-    await util.update_presence(bot)
-
-
-
-"""
-on_message() - tasks ran when a message is sent.
-"""
-@bot.event
-async def on_message(message) -> None:
-    # ignore bot
-    if message.author == bot.user:
-        return
-    # ignore everyone mentions
-    if message.mention_everyone:
+        await ctx.send(
+            f"Synced {len(synced)} commands {'globally' if spec is None else 'to the current guild.'}"
+        )
         return
 
-    # basic message logging to console
-    if not "<@!" in message.content:
-        log(f"[{message.guild.name} (#{message.channel.name})] {str(message.author)}: {message.content}", Ansi.LYELLOW)
+    ret = 0
+    for guild in guilds:
+        try:
+            await ctx.bot.tree.sync(guild=guild)
+        except discord.HTTPException:
+            pass
+        else:
+            ret += 1
 
-    # basic ping response
-    if bot.user.mentioned_in(message):
-        await message.channel.send(f"Hi, **{message.author.name}**, my name is **Moé**!\nMy command prefix is **/**. Try typing it in chat to view my full commandset!")
-
-
-
-"""
-on_ready() - tasks ran as soon as Moé is ready.
-"""
-@bot.listen()
-async def on_ready() -> None:
-    log("--- Start Tasks ---", Ansi.MAGENTA)
-    # connect to mysql
-    await util.mysql_connect(bot, config.mysql)
-    # create the client session
-    await util.create_client_session(bot)
-    # authorize with the osu!api
-    await util.auth_osu_api(bot)
-    # update presence
-    await util.update_presence(bot)
-    log("--- End Tasks ---\n", Ansi.MAGENTA)
-
-    # Active guilds
-    await util.get_active_servers(bot)
-
-    # Moé ready
-    log(f"Moé has been logged in as {bot.user}.", Ansi.LBLUE)
-    log(f"Running version {bot.version}!\n", Ansi.LBLUE)
+    await ctx.send(f"Synced the tree to {ret}/{len(guilds)}.")
 
 
+async def load_cogs():
+    for c in os.listdir("./cogs"):
+        f, e = os.path.splitext(c)
+        try:
+            if f != "__pycache__":
+                await moe.load_extension(f"cogs.{f}")
+                moe.console.print(f"Loaded cog.{f}!", style="bold green")
+        except Exception as ex:
+            moe.console.print(
+                f"Failed to load cog.{f}!\n{ex}", style="bold red")
 
-"""
-run - run Moé.
-"""
-if __name__ == "__main__":
-    bot.run(config.token) # blocking call
+
+async def main():
+    async with moe:
+        await load_cogs()
+        await moe.start(token=os.environ["TOKEN"])
+
+asyncio.run(main())
