@@ -8,9 +8,7 @@ import databases
 
 from typing import Literal, Optional
 
-import dotenv
-dotenv.load_dotenv()
-
+import settings
 
 logging.basicConfig(level=logging.DEBUG)
 discord.utils.setup_logging()
@@ -23,7 +21,7 @@ class Moe(commands.Bot):
 
 moe = Moe(command_prefix="!", intents=discord.Intents.all(), help_command=None)
 moe.console = Console()
-moe.database = databases.Database(os.environ["DB_DSN"])
+moe.database = databases.Database(settings.DB_DSN)
 
 
 @moe.command()
@@ -81,6 +79,6 @@ async def load_cogs():
 async def main():
     async with moe:
         await load_cogs()
-        await moe.start(token=os.environ["TOKEN"])
+        await moe.start(token=settings.DISCORD_TOKEN)
 
 asyncio.run(main())

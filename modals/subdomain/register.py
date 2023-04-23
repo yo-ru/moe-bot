@@ -4,8 +4,7 @@ import os
 import re
 import aiohttp
 
-import dotenv
-dotenv.load_dotenv()
+import settings
 
 
 class Register(ui.Modal, title="Register Subomain"):
@@ -43,7 +42,7 @@ class Register(ui.Modal, title="Register Subomain"):
         # begin database connection
         async with interaction.client.database as db:
             # handle gold members
-            if interaction.user.get_role(1008042019828011125): # 👑 Gold
+            if interaction.user.get_role(1008042019828011125):  # 👑 Gold
                 query = f"""
                     SELECT COUNT(*)
                       FROM domains
@@ -66,20 +65,19 @@ class Register(ui.Modal, title="Register Subomain"):
                     await interaction.response.send_message(f"Non-<@&1008042019828011125> members are limited to 1 free its.moe subdomain.\n<@&1008042019828011125> members have access up to 5 free its.moe subdomains.\nYou can purchase a <@&1008042019828011125> membership on our Ko-Fi!\nhttps://ko-fi.com/itsmoe", ephemeral=True)
                     return
 
-
             # begin http session
             async with aiohttp.ClientSession() as session:
-            # check if subdomain is available (cf)
+                # check if subdomain is available (cf)
                 async with session.request(
                     "GET",
-                    f"https://api.cloudflare.com/client/v4/zones/{os.environ['CF_ZONE_ID']}/dns_records",
+                    f"https://api.cloudflare.com/client/v4/zones/{settings.CF_ZONE_ID}/dns_records",
                     headers={
-                        "Authorization": f"Bearer {os.environ['CF_API_KEY']}"},
+                        "Authorization": f"Bearer {settings.CF_API_KEY}"},
                     params={"name": f"{self.subdomain.value}.its.moe"}
                 ) as resp:
                     cf_unavail = (await resp.json())["result"]
                 await session.close()
-            
+
             # check if subdomain is available (db)
             query = f"""
                 SELECT 1
@@ -99,9 +97,9 @@ class Register(ui.Modal, title="Register Subomain"):
                 async with aiohttp.ClientSession() as session:
                     async with session.request(
                         "POST",
-                        f"https://api.cloudflare.com/client/v4/zones/{os.environ['CF_ZONE_ID']}/dns_records",
+                        f"https://api.cloudflare.com/client/v4/zones/{settings.CF_ZONE_ID}/dns_records",
                         headers={
-                            "Authorization": f"Bearer {os.environ['CF_API_KEY']}"
+                            "Authorization": f"Bearer {settings.CF_API_KEY}"
                         },
                         json={
                             "type": self.record.value,

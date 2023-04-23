@@ -3,11 +3,9 @@ from discord.ext import commands
 from discord import app_commands
 import discord
 import os
-
 import aiohttp
 
-import dotenv
-dotenv.load_dotenv()
+import settings
 
 
 class Subdomain(commands.Cog):
@@ -57,13 +55,13 @@ class Subdomain(commands.Cog):
 
             if not domain:
                 return await interaction.response.send_message("Unable to find a subdomain by that ID.\nCheck `/subdomain list` again.", ephemeral=True)
-            
+
             async with aiohttp.ClientSession() as session:
                 await session.request(
                     "DELETE",
-                    f"https://api.cloudflare.com/client/v4/zones/{os.environ['CF_ZONE_ID']}/dns_records/{domain['cloudflare_id']}",
+                    f"https://api.cloudflare.com/client/v4/zones/{settings.CF_ZONE_ID}/dns_records/{domain['cloudflare_id']}",
                     headers={
-                        "Authorization": f"Bearer {os.environ['CF_API_KEY']}"
+                        "Authorization": f"Bearer {settings.CF_API_KEY}"
                     }
                 )
                 await session.close()
