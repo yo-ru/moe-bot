@@ -10,17 +10,8 @@ from rich.logging import RichHandler
 
 import settings
 
-logging.basicConfig(level=logging.DEBUG)
-discord.utils.setup_logging()
-
-
-class Moe(commands.Bot):
-    async def setup_hook(self):
-        moe.console.print("Moe is ready!", style="bold pink1")
-
-
-moe = Moe(command_prefix="!", intents=discord.Intents.all(), help_command=None)
-moe.console = Console()
+moe = commands.Bot(command_prefix="!",
+                   intents=discord.Intents.all(), help_command=None)
 moe.database = databases.Database(settings.DB_DSN)
 
 
