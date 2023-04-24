@@ -14,6 +14,13 @@ moe = commands.Bot(command_prefix="!",
                    intents=discord.Intents.all(), help_command=None)
 moe.database = databases.Database(settings.DB_DSN)
 
+logging.basicConfig(
+    level=logging.DEBUG if settings.DEBUG_MODE else logging.INFO,
+    format="%(message)s",
+    datefmt="[%m/%d/%Y | %H:%M:%S]",
+    handlers=[RichHandler(omit_repeated_times=False)]
+)
+moe.log = logging.getLogger("rich")
 
 @moe.command()
 @commands.guild_only()
@@ -61,10 +68,10 @@ async def load_cogs():
         try:
             if f != "__pycache__":
                 await moe.load_extension(f"cogs.{f}")
-                moe.console.print(f"Loaded cog.{f}!", style="bold green")
+                moe.log.info(f"Loaded cog.{f}!")
         except Exception as ex:
-            moe.console.print(
-                f"Failed to load cog.{f}!\n{ex}", style="bold red")
+            moe.log.warn(
+                f"Failed to load cog.{f}!\n{ex}")
 
 
 async def main():
