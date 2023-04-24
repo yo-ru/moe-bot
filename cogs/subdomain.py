@@ -1,12 +1,11 @@
-from modals.subdomain.register import Register
+import aiohttp
+import discord
 from discord.ext import commands
 from discord import app_commands
-import discord
-import os
-import aiohttp
 
 import settings
 
+from modals.subdomain.register import Register
 
 class Subdomain(commands.Cog):
     def __init__(self, bot) -> None:

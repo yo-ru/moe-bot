@@ -1,12 +1,12 @@
-import logging
-from discord.ext import commands
-import discord
-from rich.console import Console
 import os
 import asyncio
-import databases
-
+import logging
 from typing import Literal, Optional
+
+import discord
+import databases
+from discord.ext import commands
+from rich.logging import RichHandler
 
 import settings
 

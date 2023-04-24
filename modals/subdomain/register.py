@@ -1,8 +1,8 @@
-from discord import ui
-import discord
-import os
 import re
+
 import aiohttp
+import discord
+from discord import ui
 
 import settings
 
