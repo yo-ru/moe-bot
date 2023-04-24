@@ -1,4 +1,5 @@
 import os
+import signal
 import asyncio
 import logging
 from typing import Literal, Optional
@@ -9,6 +10,7 @@ from discord.ext import commands
 from rich.logging import RichHandler
 
 import settings
+
 
 moe = commands.Bot(command_prefix="!",
                    intents=discord.Intents.all(), help_command=None)
@@ -73,9 +75,21 @@ async def load_cogs():
                 f"Failed to load cog.{f}!\n{ex}")
 
 
+_close_task = None
+
+
+def keyboard_interrupt_handler(n, frame):
+    global _close_task
+    if _close_task:
+        raise KeyboardInterrupt
+    _close_task = asyncio.create_task(moe.close())
+
+
 async def main():
     async with moe:
         await load_cogs()
+
+        signal.signal(signal.SIGINT, keyboard_interrupt_handler)
         await moe.start(token=settings.DISCORD_TOKEN)
 
 asyncio.run(main())
