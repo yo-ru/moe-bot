@@ -22,26 +22,25 @@ logging.basicConfig(
 )
 moe.log = logging.getLogger("rich")
 
+
 @moe.command()
 @commands.guild_only()
 @commands.is_owner()
 async def sync(ctx: commands.Context, guilds: commands.Greedy[discord.Object], spec: Optional[Literal["~", "*", "^"]] = None) -> None:
-    # Works like:
-    # !sync -> global sync
-    # !sync ~ -> sync current guild
-    # !sync * -> copies all global app commands to current guild and syncs
-    # !sync ^ -> clears all commands from the current guild target and syncs (removes guild commands)
-    # !sync id_1 id_2 -> syncs guilds with id 1 and 2
     if not guilds:
+        # !sync ~ -> sync current guild
         if spec == "~":
             synced = await ctx.bot.tree.sync(guild=ctx.guild)
+         # !sync * -> copies all global app commands to current guild and syncs
         elif spec == "*":
             ctx.bot.tree.copy_global_to(guild=ctx.guild)
             synced = await ctx.bot.tree.sync(guild=ctx.guild)
+        # !sync ^ -> clears all commands from the current guild target and syncs (removes guild commands)
         elif spec == "^":
             ctx.bot.tree.clear_commands(guild=ctx.guild)
             await ctx.bot.tree.sync(guild=ctx.guild)
             synced = []
+        # !sync -> global sync
         else:
             synced = await ctx.bot.tree.sync()
 
@@ -49,7 +48,7 @@ async def sync(ctx: commands.Context, guilds: commands.Greedy[discord.Object], s
             f"Synced {len(synced)} commands {'globally' if spec is None else 'to the current guild.'}"
         )
         return
-
+    # !sync id_1 id_2 -> syncs guilds with id 1 and 2
     ret = 0
     for guild in guilds:
         try:
